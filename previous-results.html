@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Previous Results - PHC Jackpot</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* Previous Results Styles - SportyBet Professional */
+        .results-page {
+            padding: 0 0 90px 0;
+            background: #f3f6fb;
+            min-height: 100vh;
+        }
+
+        body.dark .results-page {
+            background: #0f172a;
+        }
+
+        .round-selector {
+            background: white;
+            margin: 0 16px 16px 16px;
+            border-radius: 16px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        body.dark .round-selector {
+            background: #1e293b;
+            border: 1px solid #334155;
+        }
+
+        .round-selector:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .round-selector .round-info {
+            flex: 1;
+        }
+
+        .round-selector .round-info .label {
+            font-size: 12px;
+            color: #7a8a9a;
+            font-weight: 600;
+        }
+
+        body.dark .round-selector .round-info .label {
+            color: #94a3b8;
+        }
+
+        .round-selector .round-info .number {
+            font-size: 18px;
+            font-weight: 800;
+            color: #0a1a2a;
+        }
+
+        body.dark .round-selector .round-info .number {
+            color: #f8fafc;
+        }
+
+        .round-selector .round-info .league-badge {
+            display: inline-block;
+            background: #004b87;
+            color: white;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        body.dark .round-selector .round-info .league-badge {
+            background: #f5b342;
+            color: #0a1a2a;
+        }
+
+        .round-selector .arrow {
+            color: #7a8a9a;
+            font-size: 18px;
+        }
+
+        body.dark .round-selector .arrow {
+            color: #94a3b8;
+        }
+
+        /* Dropdown */
+        .round-dropdown {
+            display: none;
+            background: white;
+            margin: -8px 16px 16px 16px;
+            border-radius: 0 0 16px 16px;
+            padding: 8px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-top: 2px solid #004b87;
+        }
+
+        body.dark .round-dropdown {
+            background: #1e293b;
+            border-top: 2px solid #f5b342;
+        }
+
+        .round-dropdown.open {
+            display: block;
+        }
+
+        .round-dropdown .round-option {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0f4f8;
+        }
+
+        body.dark .round-dropdown .round-option {
+            border-bottom: 1px solid #334155;
+        }
+
+        .round-dropdown .round-option:hover {
+            background: #f0f4f8;
+        }
+
+        body.dark .round-dropdown .round-option:hover {
+            background: #2a3a5a;
+        }
+
+        .round-dropdown .round-option .r-number {
+            font-weight: 700;
+            color: #0a1a2a;
+        }
+
+        body.dark .round-dropdown .round-option .r-number {
+            color: #f8fafc;
+        }
+
+        .round-dropdown .round-option .r-date {
+            font-size: 12px;
+            color: #7a8a9a;
+        }
+
+        body.dark .round-dropdown .round-option .r-date {
+            color: #94a3b8;
+        }
+
+        .round-dropdown .round-option.active-option {
+            background: #e8f1ff;
+            color: #004b87;
+        }
+
+        body.dark .round-dropdown .round-option.active-option {
+            background: #2a4a6a;
+            color: #f5b342;
+        }
+
+        /* Results Content */
+        .results-content {
+            padding: 0 16px;
+        }
+
+        /* Winnings Table - Professional Style */
+        .winnings-table {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        body.dark .winnings-table {
+            background: #1e293b;
+            border: 1px solid #334155;
+        }
+
+        .winnings-table .table-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 2fr;
+            padding: 10px 0;
+            border-bottom: 2px solid #004b87;
+            font-weight: 700;
+            font-size: 12px;
+            color: #7a8a9a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        body.dark .winnings-table .table-header {
+            border-bottom-color: #f5b342;
+            color: #94a3b8;
+        }
+
+        .winnings-table .win-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 2fr;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f4f8;
+            font-size: 14px;
+        }
+
+        body.dark .winnings-table .win-row {
+            border-bottom: 1px solid #334155;
+        }
+
+        .winnings-table .win-row:last-child {
+            border-bottom: none;
+        }
+
+        .winnings-table .win-row .correct {
+            font-weight: 700;
+            color: #004b87;
+        }
+
+        body.dark .winnings-table .win-row .correct {
+            color: #f5b342;
+        }
+
+        .winnings-table .win-row .tickets {
+            text-align: center;
+            color: #7a8a9a;
+        }
+
+        body.dark .winnings-table .win-row .tickets {
+            color: #94a3b8;
+        }
+
+        .winnings-table .win-row .prize {
+            text-align: right;
+            font-weight: 700;
+            color: #1a8a4a;
+            font-size: 15px;
+        }
+
+        body.dark .winnings-table .win-row .prize {
+            color: #10b981;
+        }
+
+        .winnings-table .total-prize {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0 6px 0;
+            font-weight: 800;
+            font-size: 16px;
+            border-top: 2px solid #004b87;
+            margin-top: 4px;
+            color: #0a1a2a;
+        }
+
+        body.dark .winnings-table .total-prize {
+            border-top-color: #f5b342;
+            color: #f8fafc;
+        }
+
+        .winnings-table .total-prize .amount {
+            color: #f5b342;
+            font-size: 18px;
+        }
+
+        body.dark .winnings-table .total-prize .amount {
+            color: #f5b342;
+        }
+
+        /* Match Results List */
+        .match-results {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        body.dark .match-results {
+            background: #1e293b;
+            border: 1px solid #334155;
+        }
+
+        .match-results .match-header {
+            display: grid;
+            grid-template-columns: 40px 2fr 1fr 1fr 50px;
+            padding: 10px 0;
+            border-bottom: 2px solid #004b87;
+            font-weight: 700;
+            font-size: 11px;
+            color: #7a8a9a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        body.dark .match-results .match-header {
+            border-bottom-color: #f5b342;
+            color: #94a3b8;
+        }
+
+        .match-results .match-header span:last-child {
+            text-align: center;
+        }
+
+        .match-result-item {
+            display: grid;
+            grid-template-columns: 40px 2fr 1fr 1fr 50px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f4f8;
+            gap: 4px;
+            align-items: center;
+        }
+
+        body.dark .match-result-item {
+            border-bottom: 1px solid #334155;
+        }
+
+        .match-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .match-result-item .match-number {
+            font-weight: 800;
+            color: #7a8a9a;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        body.dark .match-result-item .match-number {
+            color: #94a3b8;
+        }
+
+        .match-result-item .match-details .teams {
+            font-weight: 600;
+            font-size: 14px;
+            color: #0a1a2a;
+            line-height: 1.3;
+        }
+
+        body.dark .match-result-item .match-details .teams {
+            color: #f8fafc;
+        }
+
+        .match-result-item .match-details .match-date {
+            font-size: 11px;
+            color: #7a8a9a;
+        }
+
+        body.dark .match-result-item .match-details .match-date {
+            color: #94a3b8;
+        }
+
+        .match-result-item .match-score {
+            font-weight: 800;
+            font-size: 16px;
+            color: #0a1a2a;
+            text-align: center;
+        }
+
+        body.dark .match-result-item .match-score {
+            color: #f8fafc;
+        }
+
+        .match-result-item .result-badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 14px;
+            text-align: center;
+            min-width: 32px;
+        }
+
+        .result-badge.home-win {
+            background: #e6f7e6;
+            color: #1a8a4a;
+        }
+
+        .result-badge.draw {
+            background: #fff8e6;
+            color: #b8860b;
+        }
+
+        .result-badge.away-win {
+            background: #e8f1ff;
+            color: #004b87;
+        }
+
+        body.dark .result-badge.home-win {
+            background: #1a3a2a;
+            color: #10b981;
+        }
+
+        body.dark .result-badge.draw {
+            background: #3a3a1a;
+            color: #f5b342;
+        }
+
+        body.dark .result-badge.away-win {
+            background: #1a2a4a;
+            color: #60a5fa;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #7a8a9a;
+        }
+
+        .no-results i {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 12px;
+            color: #d4dce5;
+        }
+
+        body.dark .no-results i {
+            color: #334155;
+        }
+
+        /* Scrollbar styling */
+        .round-dropdown::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .round-dropdown::-webkit-scrollbar-track {
+            background: #f0f4f8;
+        }
+
+        .round-dropdown::-webkit-scrollbar-thumb {
+            background: #004b87;
+            border-radius: 10px;
+        }
+
+        body.dark .round-dropdown::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+
+        body.dark .round-dropdown::-webkit-scrollbar-thumb {
+            background: #f5b342;
+        }
+
+        /* Card Type Filter */
+        .card-filter {
+            display: flex;
+            gap: 8px;
+            margin: 0 16px 16px 16px;
+            overflow-x: auto;
+            padding: 4px 0 8px 0;
+        }
+
+        .card-filter::-webkit-scrollbar {
+            height: 2px;
+        }
+
+        .card-filter::-webkit-scrollbar-thumb {
+            background: #004b87;
+            border-radius: 10px;
+        }
+
+        .card-filter-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid #dce5f0;
+            background: white;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.3s;
+            color: #7a8a9a;
+        }
+
+        body.dark .card-filter-btn {
+            background: #1e293b;
+            border-color: #334155;
+            color: #94a3b8;
+        }
+
+        .card-filter-btn.active {
+            background: #004b87;
+            border-color: #004b87;
+            color: white;
+        }
+
+        body.dark .card-filter-btn.active {
+            background: #f5b342;
+            border-color: #f5b342;
+            color: #0a1a2a;
+        }
+
+        .card-filter-btn:hover:not(.active) {
+            border-color: #004b87;
+        }
+
+        body.dark .card-filter-btn:hover:not(.active) {
+            border-color: #f5b342;
+        }
+
+        /* Bottom nav adjustment */
+        .bottom-nav {
+            z-index: 100;
+        }
+
+        .prize-amount-highlight {
+            background: linear-gradient(135deg, #f5b342, #f59e0b);
+            padding: 12px 16px;
+            border-radius: 14px;
+            margin: 0 16px 16px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #0a1a2a;
+        }
+
+        body.dark .prize-amount-highlight {
+            color: #0a1a2a;
+        }
+
+        .prize-amount-highlight .label {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .prize-amount-highlight .value {
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        /* Card badge */
+        .card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #004b87;
+            color: white;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        body.dark .card-badge {
+            background: #f5b342;
+            color: #0a1a2a;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .match-result-item {
+                grid-template-columns: 30px 1fr 40px 30px 36px;
+                gap: 4px;
+                font-size: 12px;
+            }
+            .match-result-item .match-details .teams {
+                font-size: 12px;
+            }
+            .match-result-item .match-score {
+                font-size: 13px;
+            }
+            .match-results .match-header {
+                grid-template-columns: 30px 1fr 40px 30px 36px;
+                font-size: 9px;
+            }
+            .winnings-table .win-row {
+                font-size: 12px;
+            }
+            .winnings-table .win-row .prize {
+                font-size: 13px;
+            }
+            .winnings-table .table-header {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app results-page">
+
+        <!-- Top Bar -->
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                Previous Results
+            </div>
+            <i class="fas fa-trophy" style="color:#f5b342;"></i>
+        </div>
+
+        <div class="welcome">
+            <h1>📊 Previous Results</h1>
+            <p>View past rounds and match results</p>
+        </div>
+
+        <!-- Card Type Filter -->
+        <div class="card-filter" id="cardFilter">
+            <button class="card-filter-btn active" data-card="all" onclick="filterByCard('all')">All Cards</button>
+            <button class="card-filter-btn" data-card="apple" onclick="filterByCard('apple')">🍎 Apple</button>
+            <button class="card-filter-btn" data-card="razer" onclick="filterByCard('razer')">⚡ Razer</button>
+            <button class="card-filter-btn" data-card="steam" onclick="filterByCard('steam')">🎮 Steam</button>
+        </div>
+
+        <!-- Prize Amount Highlight -->
+        <div class="prize-amount-highlight" id="prizeHighlight">
+            <span class="label">🏆 Current Jackpot</span>
+            <span class="value" id="jackpotDisplay">Up to 6 Billion</span>
+        </div>
+
+        <!-- Round Selector -->
+        <div class="round-selector" id="roundSelector" onclick="toggleDropdown()">
+            <div class="round-info">
+                <div class="label">Select Round</div>
+                <div class="number" id="selectedRound">Round 20260701</div>
+                <span class="league-badge" id="selectedLeague">Premier League</span>
+            </div>
+            <div class="arrow">
+                <i class="fas fa-chevron-down" id="dropdownArrow"></i>
+            </div>
+        </div>
+
+        <!-- Dropdown List -->
+        <div class="round-dropdown" id="roundDropdown">
+            <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Results Content -->
+        <div class="results-content" id="resultsContent">
+            <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item" onclick="location.href='bet.html'">
+                <i class="fas fa-gamepad"></i> Predictor
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-history"></i> Results
+            </div>
+            <div class="nav-item" onclick="location.href='settings.html'">
+                <i class="fas fa-cog"></i> Settings
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast" class="toast">Message</div>
+
+    <script>
+        // ==========================================================
+        // GLOBAL DARK MODE LOADER
+        // ==========================================================
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        // ==========================================================
+        // PRIZE STRUCTURE MATCHING ENTRY.HTML
+        // ==========================================================
+        const prizeStructure = {
+            'apple': {
+                name: 'Apple Card',
+                icon: '🍎',
+                jackpot: '4.5 Billion',
+                prize12: 4500000,      // $4.5 million
+                prize11: 9000,         // $9,000
+                prize10: 15000,        // $15,000
+                entries: [
+                    { amount: 500, prize: '100 Million', prizeValue: 100000000 },
+                    { amount: 1500, prize: '2.5 Billion', prizeValue: 2500000000 },
+                    { amount: 2000, prize: '4.5 Billion', prizeValue: 4500000000 },
+                    { amount: 3500, prize: '4.5 Billion', prizeValue: 4500000000 }
+                ]
+            },
+            'razer': {
+                name: 'Razer Gold',
+                icon: '⚡',
+                jackpot: '6 Billion',
+                prize12: 6000000,      // $6 million
+                prize11: 12000,        // $12,000
+                prize10: 20000,        // $20,000
+                entries: [
+                    { amount: 500, prize: '200 Million', prizeValue: 200000000 },
+                    { amount: 1500, prize: '4 Billion', prizeValue: 4000000000 },
+                    { amount: 2000, prize: '6 Billion', prizeValue: 6000000000 },
+                    { amount: 3500, prize: '6 Billion', prizeValue: 6000000000 }
+                ]
+            },
+            'steam': {
+                name: 'Steam Card',
+                icon: '🎮',
+                jackpot: '2 Billion',
+                prize12: 2000000,      // $2 million
+                prize11: 4000,         // $4,000
+                prize10: 6667,         // $6,667
+                entries: [
+                    { amount: 500, prize: '50 Million', prizeValue: 50000000 },
+                    { amount: 1500, prize: '1 Billion', prizeValue: 1000000000 },
+                    { amount: 2000, prize: '2 Billion', prizeValue: 2000000000 },
+                    { amount: 3500, prize: '2 Billion', prizeValue: 2000000000 }
+                ]
+            }
+        };
+
+        // Combined prize structure for "All Cards" - sums of all card prizes
+        const allCardsPrize = {
+            prize12: 4500000 + 6000000 + 2000000,  // 12.5 million
+            prize11: 9000 + 12000 + 4000,          // 25,000
+            prize10: 15000 + 20000 + 6667,         // 41,667
+            jackpot: '12.5 Billion'                 // Combined jackpot
+        };
+
+        // ==========================================================
+        // REAL FOOTBALL DATA WITH CARD TYPES
+        // ==========================================================
+        const realMatches = [
+            // ROUND 20260701 - Premier League (Apple Card)
+            {
+                id: 1,
+                round_number: "20260701",
+                draw_date: "2026-07-01",
+                league: "Premier League",
+                cardType: "apple",
+                tickets: { '12': 7, '11': 199, '10': 1989 },
+                matches: [
+                    { match_number: 1, home: "Manchester City", away: "Liverpool", home_score: 2, away_score: 1, result: "1", date: "2026-07-01 15:00" },
+                    { match_number: 2, home: "Arsenal", away: "Chelsea", home_score: 1, away_score: 1, result: "X", date: "2026-07-01 15:00" },
+                    { match_number: 3, home: "Manchester United", away: "Tottenham", home_score: 3, away_score: 0, result: "1", date: "2026-07-01 17:30" },
+                    { match_number: 4, home: "Newcastle", away: "Aston Villa", home_score: 2, away_score: 2, result: "X", date: "2026-07-01 12:30" },
+                    { match_number: 5, home: "Brighton", away: "West Ham", home_score: 1, away_score: 0, result: "1", date: "2026-07-01 14:00" },
+                    { match_number: 6, home: "Crystal Palace", away: "Everton", home_score: 0, away_score: 2, result: "2", date: "2026-07-01 14:00" },
+                    { match_number: 7, home: "Barcelona", away: "Real Madrid", home_score: 3, away_score: 2, result: "1", date: "2026-07-01 20:00" },
+                    { match_number: 8, home: "Atletico Madrid", away: "Sevilla", home_score: 1, away_score: 0, result: "1", date: "2026-07-01 18:00" },
+                    { match_number: 9, home: "Inter Milan", away: "AC Milan", home_score: 2, away_score: 1, result: "1", date: "2026-07-01 19:45" },
+                    { match_number: 10, home: "Juventus", away: "Napoli", home_score: 0, away_score: 0, result: "X", date: "2026-07-01 17:00" },
+                    { match_number: 11, home: "Bayern Munich", away: "Borussia Dortmund", home_score: 4, away_score: 1, result: "1", date: "2026-07-01 16:30" },
+                    { match_number: 12, home: "PSG", away: "Marseille", home_score: 2, away_score: 2, result: "X", date: "2026-07-01 20:45" }
+                ]
+            },
+            // ROUND 20260628 - Premier League (Razer Gold)
+            {
+                id: 2,
+                round_number: "20260628",
+                draw_date: "2026-06-28",
+                league: "Premier League",
+                cardType: "razer",
+                tickets: { '12': 7, '11': 199, '10': 1989 },
+                matches: [
+                    { match_number: 1, home: "Arsenal", away: "Manchester City", home_score: 1, away_score: 2, result: "2", date: "2026-06-28 14:00" },
+                    { match_number: 2, home: "Liverpool", away: "Chelsea", home_score: 3, away_score: 1, result: "1", date: "2026-06-28 16:30" },
+                    { match_number: 3, home: "Tottenham", away: "Newcastle", home_score: 2, away_score: 0, result: "1", date: "2026-06-28 12:30" },
+                    { match_number: 4, home: "Aston Villa", away: "Manchester United", home_score: 1, away_score: 1, result: "X", date: "2026-06-28 15:00" },
+                    { match_number: 5, home: "West Ham", away: "Brighton", home_score: 0, away_score: 3, result: "2", date: "2026-06-28 14:00" },
+                    { match_number: 6, home: "Everton", away: "Crystal Palace", home_score: 2, away_score: 2, result: "X", date: "2026-06-28 14:00" },
+                    { match_number: 7, home: "Real Madrid", away: "Atletico Madrid", home_score: 1, away_score: 0, result: "1", date: "2026-06-28 20:00" },
+                    { match_number: 8, home: "Sevilla", away: "Barcelona", home_score: 2, away_score: 3, result: "2", date: "2026-06-28 18:00" },
+                    { match_number: 9, home: "AC Milan", away: "Inter Milan", home_score: 1, away_score: 1, result: "X", date: "2026-06-28 19:45" },
+                    { match_number: 10, home: "Napoli", away: "Juventus", home_score: 3, away_score: 0, result: "1", date: "2026-06-28 17:00" },
+                    { match_number: 11, home: "Borussia Dortmund", away: "Bayern Munich", home_score: 2, away_score: 2, result: "X", date: "2026-06-28 16:30" },
+                    { match_number: 12, home: "Marseille", away: "PSG", home_score: 0, away_score: 4, result: "2", date: "2026-06-28 20:45" }
+                ]
+            },
+            // ROUND 20260621 - Serie A (Steam Card)
+            {
+                id: 3,
+                round_number: "20260621",
+                draw_date: "2026-06-21",
+                league: "Serie A",
+                cardType: "steam",
+                tickets: { '12': 3, '11': 45, '10': 567 },
+                matches: [
+                    { match_number: 1, home: "Inter Milan", away: "Juventus", home_score: 2, away_score: 0, result: "1", date: "2026-06-21 19:45" },
+                    { match_number: 2, home: "AC Milan", away: "Napoli", home_score: 1, away_score: 1, result: "X", date: "2026-06-21 17:00" },
+                    { match_number: 3, home: "Roma", away: "Lazio", home_score: 3, away_score: 2, result: "1", date: "2026-06-21 14:00" },
+                    { match_number: 4, home: "Barcelona", away: "Real Sociedad", home_score: 4, away_score: 0, result: "1", date: "2026-06-21 20:00" },
+                    { match_number: 5, home: "Real Madrid", away: "Villarreal", home_score: 2, away_score: 1, result: "1", date: "2026-06-21 18:00" },
+                    { match_number: 6, home: "Bayern Munich", away: "Borussia Dortmund", home_score: 3, away_score: 0, result: "1", date: "2026-06-21 16:30" },
+                    { match_number: 7, home: "Liverpool", away: "Arsenal", home_score: 1, away_score: 0, result: "1", date: "2026-06-21 16:30" },
+                    { match_number: 8, home: "Manchester City", away: "Tottenham", home_score: 2, away_score: 2, result: "X", date: "2026-06-21 14:00" },
+                    { match_number: 9, home: "Chelsea", away: "Manchester United", home_score: 0, away_score: 1, result: "2", date: "2026-06-21 12:30" },
+                    { match_number: 10, home: "Newcastle", away: "West Ham", home_score: 3, away_score: 1, result: "1", date: "2026-06-21 15:00" },
+                    { match_number: 11, home: "PSG", away: "Monaco", home_score: 2, away_score: 0, result: "1", date: "2026-06-21 20:45" },
+                    { match_number: 12, home: "Atletico Madrid", away: "Sevilla", home_score: 1, away_score: 1, result: "X", date: "2026-06-21 18:00" }
+                ]
+            },
+            // ROUND 20260614 - Bundesliga (Apple Card)
+            {
+                id: 4,
+                round_number: "20260614",
+                draw_date: "2026-06-14",
+                league: "Bundesliga",
+                cardType: "apple",
+                tickets: { '12': 12, '11': 156, '10': 1234 },
+                matches: [
+                    { match_number: 1, home: "Manchester United", away: "Liverpool", home_score: 1, away_score: 2, result: "2", date: "2026-06-14 15:00" },
+                    { match_number: 2, home: "Arsenal", away: "Chelsea", home_score: 2, away_score: 0, result: "1", date: "2026-06-14 17:30" },
+                    { match_number: 3, home: "Tottenham", away: "Manchester City", home_score: 0, away_score: 3, result: "2", date: "2026-06-14 12:30" },
+                    { match_number: 4, home: "Barcelona", away: "Atletico Madrid", home_score: 3, away_score: 1, result: "1", date: "2026-06-14 20:00" },
+                    { match_number: 5, home: "Real Madrid", away: "Sevilla", home_score: 2, away_score: 0, result: "1", date: "2026-06-14 18:00" },
+                    { match_number: 6, home: "Inter Milan", away: "AC Milan", home_score: 1, away_score: 2, result: "2", date: "2026-06-14 19:45" },
+                    { match_number: 7, home: "Napoli", away: "Juventus", home_score: 2, away_score: 1, result: "1", date: "2026-06-14 17:00" },
+                    { match_number: 8, home: "Bayern Munich", away: "RB Leipzig", home_score: 4, away_score: 1, result: "1", date: "2026-06-14 16:30" },
+                    { match_number: 9, home: "PSG", away: "Lyon", home_score: 3, away_score: 0, result: "1", date: "2026-06-14 20:45" },
+                    { match_number: 10, home: "Newcastle", away: "Aston Villa", home_score: 2, away_score: 2, result: "X", date: "2026-06-14 14:00" },
+                    { match_number: 11, home: "Brighton", away: "Everton", home_score: 1, away_score: 0, result: "1", date: "2026-06-14 14:00" },
+                    { match_number: 12, home: "Crystal Palace", away: "West Ham", home_score: 0, away_score: 1, result: "2", date: "2026-06-14 14:00" }
+                ]
+            },
+            // ROUND 20260607 - Premier League (Razer Gold)
+            {
+                id: 5,
+                round_number: "20260607",
+                draw_date: "2026-06-07",
+                league: "Premier League",
+                cardType: "razer",
+                tickets: { '12': 5, '11': 89, '10': 756 },
+                matches: [
+                    { match_number: 1, home: "Bayern Munich", away: "Borussia Dortmund", home_score: 2, away_score: 1, result: "1", date: "2026-06-07 16:30" },
+                    { match_number: 2, home: "RB Leipzig", away: "Bayer Leverkusen", home_score: 3, away_score: 2, result: "1", date: "2026-06-07 14:00" },
+                    { match_number: 3, home: "Real Madrid", away: "Barcelona", home_score: 2, away_score: 2, result: "X", date: "2026-06-07 20:00" },
+                    { match_number: 4, home: "Atletico Madrid", away: "Real Sociedad", home_score: 1, away_score: 0, result: "1", date: "2026-06-07 18:00" },
+                    { match_number: 5, home: "AC Milan", away: "Inter Milan", home_score: 0, away_score: 1, result: "2", date: "2026-06-07 19:45" },
+                    { match_number: 6, home: "Juventus", away: "Napoli", home_score: 1, away_score: 1, result: "X", date: "2026-06-07 17:00" },
+                    { match_number: 7, home: "Liverpool", away: "Manchester City", home_score: 2, away_score: 0, result: "1", date: "2026-06-07 15:00" },
+                    { match_number: 8, home: "Arsenal", away: "Manchester United", home_score: 3, away_score: 1, result: "1", date: "2026-06-07 17:30" },
+                    { match_number: 9, home: "Chelsea", away: "Tottenham", home_score: 1, away_score: 0, result: "1", date: "2026-06-07 12:30" },
+                    { match_number: 10, home: "PSG", away: "Marseille", home_score: 2, away_score: 0, result: "1", date: "2026-06-07 20:45" },
+                    { match_number: 11, home: "Sevilla", away: "Villarreal", home_score: 1, away_score: 1, result: "X", date: "2026-06-07 18:00" },
+                    { match_number: 12, home: "West Ham", away: "Newcastle", home_score: 0, away_score: 2, result: "2", date: "2026-06-07 14:00" }
+                ]
+            },
+            // ROUND 20260531 - Serie A (Steam Card)
+            {
+                id: 6,
+                round_number: "20260531",
+                draw_date: "2026-05-31",
+                league: "Serie A",
+                cardType: "steam",
+                tickets: { '12': 8, '11': 234, '10': 1876 },
+                matches: [
+                    { match_number: 1, home: "Manchester City", away: "Arsenal", home_score: 2, away_score: 2, result: "X", date: "2026-05-31 15:00" },
+                    { match_number: 2, home: "Liverpool", away: "Tottenham", home_score: 3, away_score: 0, result: "1", date: "2026-05-31 17:30" },
+                    { match_number: 3, home: "Chelsea", away: "Newcastle", home_score: 1, away_score: 1, result: "X", date: "2026-05-31 12:30" },
+                    { match_number: 4, home: "Barcelona", away: "Real Madrid", home_score: 1, away_score: 2, result: "2", date: "2026-05-31 20:00" },
+                    { match_number: 5, home: "Atletico Madrid", away: "Sevilla", home_score: 2, away_score: 0, result: "1", date: "2026-05-31 18:00" },
+                    { match_number: 6, home: "Inter Milan", away: "AC Milan", home_score: 2, away_score: 1, result: "1", date: "2026-05-31 19:45" },
+                    { match_number: 7, home: "Juventus", away: "Napoli", home_score: 0, away_score: 2, result: "2", date: "2026-05-31 17:00" },
+                    { match_number: 8, home: "Bayern Munich", away: "Borussia Dortmund", home_score: 3, away_score: 1, result: "1", date: "2026-05-31 16:30" },
+                    { match_number: 9, home: "PSG", away: "Lyon", home_score: 2, away_score: 0, result: "1", date: "2026-05-31 20:45" },
+                    { match_number: 10, home: "Manchester United", away: "Aston Villa", home_score: 1, away_score: 2, result: "2", date: "2026-05-31 14:00" },
+                    { match_number: 11, home: "Brighton", away: "West Ham", home_score: 0, away_score: 1, result: "2", date: "2026-05-31 14:00" },
+                    { match_number: 12, home: "Crystal Palace", away: "Everton", home_score: 1, away_score: 1, result: "X", date: "2026-05-31 14:00" }
+                ]
+            },
+            // ROUND 20260524 - Bundesliga (Apple Card)
+            {
+                id: 7,
+                round_number: "20260524",
+                draw_date: "2026-05-24",
+                league: "Bundesliga",
+                cardType: "apple",
+                tickets: { '12': 4, '11': 67, '10': 432 },
+                matches: [
+                    { match_number: 1, home: "Napoli", away: "Inter Milan", home_score: 1, away_score: 0, result: "1", date: "2026-05-24 19:45" },
+                    { match_number: 2, home: "AC Milan", away: "Juventus", home_score: 2, away_score: 2, result: "X", date: "2026-05-24 17:00" },
+                    { match_number: 3, home: "Real Madrid", away: "Atletico Madrid", home_score: 1, away_score: 0, result: "1", date: "2026-05-24 20:00" },
+                    { match_number: 4, home: "Barcelona", away: "Sevilla", home_score: 3, away_score: 0, result: "1", date: "2026-05-24 18:00" },
+                    { match_number: 5, home: "Borussia Dortmund", away: "Bayern Munich", home_score: 2, away_score: 3, result: "2", date: "2026-05-24 16:30" },
+                    { match_number: 6, home: "Manchester City", away: "Liverpool", home_score: 0, away_score: 1, result: "2", date: "2026-05-24 15:00" },
+                    { match_number: 7, home: "Arsenal", away: "Chelsea", home_score: 2, away_score: 1, result: "1", date: "2026-05-24 17:30" },
+                    { match_number: 8, home: "Tottenham", away: "Manchester United", home_score: 0, away_score: 2, result: "2", date: "2026-05-24 12:30" },
+                    { match_number: 9, home: "PSG", away: "Monaco", home_score: 3, away_score: 1, result: "1", date: "2026-05-24 20:45" },
+                    { match_number: 10, home: "Newcastle", away: "Aston Villa", home_score: 2, away_score: 0, result: "1", date: "2026-05-24 14:00" },
+                    { match_number: 11, home: "West Ham", away: "Brighton", home_score: 1, away_score: 1, result: "X", date: "2026-05-24 14:00" },
+                    { match_number: 12, home: "Everton", away: "Crystal Palace", home_score: 0, away_score: 3, result: "2", date: "2026-05-24 14:00" }
+                ]
+            },
+            // ROUND 20260517 - Premier League (Razer Gold)
+            {
+                id: 8,
+                round_number: "20260517",
+                draw_date: "2026-05-17",
+                league: "Premier League",
+                cardType: "razer",
+                tickets: { '12': 6, '11': 123, '10': 876 },
+                matches: [
+                    { match_number: 1, home: "Liverpool", away: "Arsenal", home_score: 2, away_score: 0, result: "1", date: "2026-05-17 15:00" },
+                    { match_number: 2, home: "Manchester City", away: "Chelsea", home_score: 3, away_score: 1, result: "1", date: "2026-05-17 17:30" },
+                    { match_number: 3, home: "Tottenham", away: "Newcastle", home_score: 2, away_score: 1, result: "1", date: "2026-05-17 12:30" },
+                    { match_number: 4, home: "Real Madrid", away: "Barcelona", home_score: 1, away_score: 1, result: "X", date: "2026-05-17 20:00" },
+                    { match_number: 5, home: "Sevilla", away: "Atletico Madrid", home_score: 0, away_score: 2, result: "2", date: "2026-05-17 18:00" },
+                    { match_number: 6, home: "Inter Milan", away: "Napoli", home_score: 2, away_score: 2, result: "X", date: "2026-05-17 19:45" },
+                    { match_number: 7, home: "Juventus", away: "AC Milan", home_score: 1, away_score: 0, result: "1", date: "2026-05-17 17:00" },
+                    { match_number: 8, home: "Bayern Munich", away: "RB Leipzig", home_score: 4, away_score: 0, result: "1", date: "2026-05-17 16:30" },
+                    { match_number: 9, home: "PSG", away: "Lyon", home_score: 2, away_score: 1, result: "1", date: "2026-05-17 20:45" },
+                    { match_number: 10, home: "Manchester United", away: "West Ham", home_score: 1, away_score: 0, result: "1", date: "2026-05-17 14:00" },
+                    { match_number: 11, home: "Brighton", away: "Everton", home_score: 0, away_score: 0, result: "X", date: "2026-05-17 14:00" },
+                    { match_number: 12, home: "Crystal Palace", away: "Aston Villa", home_score: 2, away_score: 3, result: "2", date: "2026-05-17 14:00" }
+                ]
+            },
+            // ROUND 20260510 - Serie A (Steam Card)
+            {
+                id: 9,
+                round_number: "20260510",
+                draw_date: "2026-05-10",
+                league: "Serie A",
+                cardType: "steam",
+                tickets: { '12': 2, '11': 45, '10': 234 },
+                matches: [
+                    { match_number: 1, home: "Borussia Dortmund", away: "Bayern Munich", home_score: 1, away_score: 2, result: "2", date: "2026-05-10 16:30" },
+                    { match_number: 2, home: "Bayer Leverkusen", away: "RB Leipzig", home_score: 2, away_score: 2, result: "X", date: "2026-05-10 14:00" },
+                    { match_number: 3, home: "Barcelona", away: "Real Madrid", home_score: 3, away_score: 1, result: "1", date: "2026-05-10 20:00" },
+                    { match_number: 4, home: "Atletico Madrid", away: "Sevilla", home_score: 2, away_score: 0, result: "1", date: "2026-05-10 18:00" },
+                    { match_number: 5, home: "Inter Milan", away: "AC Milan", home_score: 1, away_score: 1, result: "X", date: "2026-05-10 19:45" },
+                    { match_number: 6, home: "Napoli", away: "Juventus", home_score: 2, away_score: 1, result: "1", date: "2026-05-10 17:00" },
+                    { match_number: 7, home: "Liverpool", away: "Manchester City", home_score: 2, away_score: 2, result: "X", date: "2026-05-10 15:00" },
+                    { match_number: 8, home: "Arsenal", away: "Manchester United", home_score: 3, away_score: 0, result: "1", date: "2026-05-10 17:30" },
+                    { match_number: 9, home: "Chelsea", away: "Tottenham", home_score: 0, away_score: 2, result: "2", date: "2026-05-10 12:30" },
+                    { match_number: 10, home: "PSG", away: "Marseille", home_score: 4, away_score: 0, result: "1", date: "2026-05-10 20:45" },
+                    { match_number: 11, home: "Villarreal", away: "Real Sociedad", home_score: 1, away_score: 0, result: "1", date: "2026-05-10 18:00" },
+                    { match_number: 12, home: "Newcastle", away: "Aston Villa", home_score: 2, away_score: 2, result: "X", date: "2026-05-10 14:00" }
+                ]
+            }
+        ];
+
+        // ==========================================================
+        // STATE
+        // ==========================================================
+        let currentRound = realMatches[0];
+        let isDropdownOpen = false;
+        let currentFilter = 'all';
+
+        // ==========================================================
+        // HELPERS
+        // ==========================================================
+        function formatCurrency(val) {
+            return val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function formatLargeCurrency(val) {
+            if (val >= 1000000000) {
+                return (val / 1000000000).toFixed(1) + ' Billion';
+            } else if (val >= 1000000) {
+                return (val / 1000000).toFixed(0) + ' Million';
+            } else {
+                return '$' + formatCurrency(val);
+            }
+        }
+
+        function showToast(msg, duration = 3000) {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => toast.classList.remove('show'), duration);
+        }
+
+        function getResultBadgeClass(result) {
+            if (result === '1') return 'home-win';
+            if (result === 'X') return 'draw';
+            if (result === '2') return 'away-win';
+            return '';
+        }
+
+        function getResultLabel(result) {
+            if (result === '1') return '1';
+            if (result === 'X') return 'X';
+            if (result === '2') return '2';
+            return result;
+        }
+
+        function getCardIcon(cardType) {
+            const icons = {
+                'apple': '🍎',
+                'razer': '⚡',
+                'steam': '🎮'
+            };
+            return icons[cardType] || '🏆';
+        }
+
+        function getCardName(cardType) {
+            const names = {
+                'apple': 'Apple Card',
+                'razer': 'Razer Gold',
+                'steam': 'Steam Card'
+            };
+            return names[cardType] || 'Card';
+        }
+
+        function getCardPrize(cardType) {
+            if (cardType === 'all') {
+                return allCardsPrize;
+            }
+            return prizeStructure[cardType] || prizeStructure['apple'];
+        }
+
+        // ==========================================================
+        // FILTER BY CARD
+        // ==========================================================
+        function filterByCard(cardType) {
+            currentFilter = cardType;
+            
+            document.querySelectorAll('.card-filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.card === cardType) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Update jackpot display
+            if (cardType === 'all') {
+                document.getElementById('jackpotDisplay').textContent = 'Up to 12.5 Billion';
+            } else {
+                const cardData = prizeStructure[cardType];
+                document.getElementById('jackpotDisplay').textContent = `Up to ${cardData.jackpot}`;
+            }
+
+            const filteredRounds = realMatches.filter(round => {
+                if (cardType === 'all') return true;
+                return round.cardType === cardType;
+            });
+
+            if (filteredRounds.length > 0) {
+                currentRound = filteredRounds[0];
+                renderDropdown(filteredRounds);
+                renderResults(currentRound);
+                document.getElementById('selectedRound').textContent = `Round ${currentRound.round_number}`;
+                document.getElementById('selectedLeague').textContent = currentRound.league;
+            } else {
+                document.getElementById('resultsContent').innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <h3>No Results Found</h3>
+                        <p>No rounds available for ${getCardName(cardType)}</p>
+                    </div>
+                `;
+                document.getElementById('selectedRound').textContent = 'No rounds';
+                document.getElementById('selectedLeague').textContent = '—';
+            }
+        }
+
+        // ==========================================================
+        // RENDER DROPDOWN
+        // ==========================================================
+        function renderDropdown(filteredRounds = null) {
+            const container = document.getElementById('roundDropdown');
+            container.innerHTML = '';
+
+            const rounds = filteredRounds || realMatches;
+            const sortedRounds = [...rounds].sort((a, b) => b.id - a.id);
+
+            if (sortedRounds.length === 0) {
+                container.innerHTML = `
+                    <div style="padding: 20px; text-align: center; color: #7a8a9a;">
+                        No rounds available
+                    </div>
+                `;
+                return;
+            }
+
+            sortedRounds.forEach(round => {
+                const option = document.createElement('div');
+                option.className = 'round-option';
+                if (round.id === currentRound.id) {
+                    option.classList.add('active-option');
+                }
+                const cardIcon = getCardIcon(round.cardType);
+                option.innerHTML = `
+                    <span class="r-number">${cardIcon} Round ${round.round_number}</span>
+                    <span class="r-date">${round.draw_date} • ${round.league}</span>
+                `;
+                option.onclick = function() {
+                    selectRound(round);
+                };
+                container.appendChild(option);
+            });
+        }
+
+        // ==========================================================
+        // SELECT ROUND
+        // ==========================================================
+        function selectRound(round) {
+            currentRound = round;
+            document.getElementById('selectedRound').textContent = `Round ${round.round_number}`;
+            document.getElementById('selectedLeague').textContent = round.league;
+            closeDropdown();
+            renderDropdown();
+            renderResults(round);
+        }
+
+        // ==========================================================
+        // TOGGLE DROPDOWN
+        // ==========================================================
+        function toggleDropdown() {
+            const dropdown = document.getElementById('roundDropdown');
+            const arrow = document.getElementById('dropdownArrow');
+
+            if (isDropdownOpen) {
+                closeDropdown();
+            } else {
+                openDropdown();
+            }
+        }
+
+        function openDropdown() {
+            const dropdown = document.getElementById('roundDropdown');
+            const arrow = document.getElementById('dropdownArrow');
+            dropdown.classList.add('open');
+            arrow.className = 'fas fa-chevron-up';
+            isDropdownOpen = true;
+        }
+
+        function closeDropdown() {
+            const dropdown = document.getElementById('roundDropdown');
+            const arrow = document.getElementById('dropdownArrow');
+            dropdown.classList.remove('open');
+            arrow.className = 'fas fa-chevron-down';
+            isDropdownOpen = false;
+        }
+
+        // ==========================================================
+        // RENDER RESULTS WITH DYNAMIC PRIZES
+        // ==========================================================
+        function renderResults(round) {
+            const container = document.getElementById('resultsContent');
+            const cardType = round.cardType || 'apple';
+            const cardIcon = getCardIcon(cardType);
+            const cardName = getCardName(cardType);
+            
+            // Get prize structure for this card
+            let prizes;
+            if (currentFilter === 'all') {
+                prizes = allCardsPrize;
+            } else {
+                prizes = prizeStructure[cardType] || prizeStructure['apple'];
+            }
+
+            const prize12 = prizes.prize12;
+            const prize11 = prizes.prize11;
+            const prize10 = prizes.prize10;
+
+            // Get ticket counts from round
+            const tickets12 = round.tickets['12'] || 0;
+            const tickets11 = round.tickets['11'] || 0;
+            const tickets10 = round.tickets['10'] || 0;
+
+            // Calculate totals
+            const totalPrize = (tickets12 * prize12) + (tickets11 * prize11) + (tickets10 * prize10);
+
+            let html = '';
+
+            // Card badge
+            html += `
+                <div style="margin: 8px 0 16px 0; text-align: center;">
+                    <span class="card-badge">
+                        ${cardIcon} ${cardName} • ${round.league}
+                    </span>
+                </div>
+            `;
+
+            // Winnings Section
+            html += `
+                <div class="winnings-table">
+                    <h3 style="font-size: 16px; margin-bottom: 8px; color: #0a1a2a;">
+                        🏆 Winnings - Round ${round.round_number}
+                    </h3>
+                    <div class="table-header">
+                        <span>Correct Events</span>
+                        <span style="text-align: center;">No. Tickets</span>
+                        <span style="text-align: right;">Winning per Ticket</span>
+                    </div>
+                    <div class="win-row">
+                        <span class="correct">12 out of 12</span>
+                        <span class="tickets">${tickets12}</span>
+                        <span class="prize">$${formatCurrency(prize12)}</span>
+                    </div>
+                    <div class="win-row">
+                        <span class="correct">11 out of 12</span>
+                        <span class="tickets">${tickets11}</span>
+                        <span class="prize">$${formatCurrency(prize11)}</span>
+                    </div>
+                    <div class="win-row">
+                        <span class="correct">10 out of 12</span>
+                        <span class="tickets">${tickets10}</span>
+                        <span class="prize">$${formatCurrency(prize10)}</span>
+                    </div>
+                    <div class="total-prize">
+                        <span>💰 Total Jackpot Pool</span>
+                        <span class="amount">$${formatCurrency(totalPrize)}</span>
+                    </div>
+                </div>
+            `;
+
+            // Match Results
+            html += `
+                <div class="match-results">
+                    <h3 style="font-size: 16px; margin-bottom: 8px; color: #0a1a2a;">
+                        📋 Match Results - ${round.draw_date}
+                    </h3>
+                    <div class="match-header">
+                        <span>#</span>
+                        <span>Match</span>
+                        <span style="text-align: center;">Score</span>
+                        <span style="text-align: center;">Result</span>
+                        <span style="text-align: center;"></span>
+                    </div>
+            `;
+
+            if (round.matches && round.matches.length > 0) {
+                round.matches.forEach(match => {
+                    const badgeClass = getResultBadgeClass(match.result);
+                    const resultLabel = getResultLabel(match.result);
+                    html += `
+                        <div class="match-result-item">
+                            <span class="match-number">${match.match_number}</span>
+                            <div class="match-details">
+                                <div class="teams">${match.home}<br><span style="font-size:12px; color:#7a8a9a;">vs</span><br>${match.away}</div>
+                                <div class="match-date">${match.date}</div>
+                            </div>
+                            <div class="match-score">${match.home_score} - ${match.away_score}</div>
+                            <span class="result-badge ${badgeClass}" style="justify-self: center;">${resultLabel}</span>
+                            <span style="font-size:12px; color:#7a8a9a; text-align:center;"></span>
+                        </div>
+                    `;
+                });
+            } else {
+                html += `
+                    <div class="no-results">
+                        <i class="fas fa-futbol"></i>
+                        <p>No matches available for this round.</p>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('jackpotDisplay').textContent = 'Up to 12.5 Billion';
+            renderDropdown();
+            renderResults(currentRound);
+            console.log('📊 Previous Results loaded with dynamic card-specific prizes!');
+            console.log('🍎 Apple: 12/12=$4.5M, 11/12=$9K, 10/12=$15K');
+            console.log('⚡ Razer: 12/12=$6M, 11/12=$12K, 10/12=$20K');
+            console.log('🎮 Steam: 12/12=$2M, 11/12=$4K, 10/12=$6,667');
+            console.log('📊 All Cards Combined: 12/12=$12.5M, 11/12=$25K, 10/12=$41,667');
+        });
+
+        document.addEventListener('click', function(e) {
+            const selector = document.getElementById('roundSelector');
+            const dropdown = document.getElementById('roundDropdown');
+            if (!selector.contains(e.target) && !dropdown.contains(e.target)) {
+                closeDropdown();
+            }
+        });
+    </script>
+
+</body>
+</html>

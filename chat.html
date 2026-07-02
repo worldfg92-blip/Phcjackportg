@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Live Chat - PHC Casino</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ========================================================== */
+        /* PROFESSIONAL LIVE CHAT - SPORTYBET STYLE                   */
+        /* ========================================================== */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #eef2f7;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #1a1a2e;
+            min-height: 100vh;
+        }
+
+        body.dark {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #eef2f7;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.dark .app {
+            background: #0f172a;
+        }
+
+        /* ========================================================== */
+        /* TOP BAR                                                     */
+        /* ========================================================== */
+        .topbar {
+            background: linear-gradient(135deg, #0d1b4a, #1a237e);
+            color: white;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            flex-shrink: 0;
+        }
+
+        body.dark .topbar {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-bottom: 1px solid #334155;
+        }
+
+        .topbar .logo {
+            font-size: 17px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ffd700;
+        }
+
+        .topbar .logo i {
+            cursor: pointer;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .topbar .right-icons {
+            display: flex;
+            gap: 14px;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .topbar .right-icons i {
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .topbar .right-icons i:hover {
+            color: #ffd700;
+        }
+
+        .topbar .online-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #10b981;
+        }
+
+        .topbar .online-status .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulseDot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* ========================================================== */
+        /* CHAT HEADER                                                 */
+        /* ========================================================== */
+        .chat-header {
+            background: #ffffff;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e8ecf1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        body.dark .chat-header {
+            background: #1e293b;
+            border-bottom-color: #334155;
+        }
+
+        .chat-header .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-header .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a237e, #283593);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffd700;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        body.dark .chat-header .admin-avatar {
+            background: linear-gradient(135deg, #f5b342, #f59e0b);
+            color: #0f172a;
+        }
+
+        .chat-header .admin-details .name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #212529;
+        }
+
+        body.dark .chat-header .admin-details .name {
+            color: #f8fafc;
+        }
+
+        .chat-header .admin-details .status {
+            font-size: 11px;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .chat-header .admin-details .status .dot-small {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #10b981;
+            display: inline-block;
+        }
+
+        .chat-header .chat-actions {
+            display: flex;
+            gap: 12px;
+            color: #6c757d;
+        }
+
+        .chat-header .chat-actions i {
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 16px;
+        }
+
+        .chat-header .chat-actions i:hover {
+            color: #1a237e;
+        }
+
+        body.dark .chat-header .chat-actions i:hover {
+            color: #f5b342;
+        }
+
+        /* ========================================================== */
+        /* MESSAGES AREA                                               */
+        /* ========================================================== */
+        .messages-area {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: #f8fafc;
+            min-height: 300px;
+            max-height: 55vh;
+        }
+
+        body.dark .messages-area {
+            background: #0f172a;
+        }
+
+        .messages-area::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .messages-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .messages-area::-webkit-scrollbar-thumb {
+            background: #1a237e;
+            border-radius: 10px;
+        }
+
+        body.dark .messages-area::-webkit-scrollbar-thumb {
+            background: #f5b342;
+        }
+
+        /* ========================================================== */
+        /* MESSAGE BUBBLES                                             */
+        /* ========================================================== */
+        .message {
+            max-width: 85%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            animation: messageIn 0.3s ease;
+            position: relative;
+        }
+
+        @keyframes messageIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: #ffffff;
+            border-bottom-right-radius: 4px;
+        }
+
+        body.dark .message.user {
+            background: linear-gradient(135deg, #f5b342, #f59e0b);
+            color: #0f172a;
+        }
+
+        .message.admin {
+            align-self: flex-start;
+            background: #ffffff;
+            color: #212529;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e8ecf1;
+        }
+
+        body.dark .message.admin {
+            background: #1e293b;
+            color: #f8fafc;
+            border-color: #334155;
+        }
+
+        .message .msg-sender {
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2px;
+        }
+
+        body.dark .message.admin .msg-sender {
+            color: #94a3b8;
+        }
+
+        .message.user .msg-sender {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        body.dark .message.user .msg-sender {
+            color: rgba(15, 23, 42, 0.5);
+        }
+
+        .message .msg-time {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 4px;
+            text-align: right;
+        }
+
+        body.dark .message.admin .msg-time {
+            color: #6c7a8a;
+        }
+
+        .message.user .msg-time {
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        body.dark .message.user .msg-time {
+            color: rgba(15, 23, 42, 0.35);
+        }
+
+        .message .msg-image {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 4px;
+            cursor: pointer;
+        }
+
+        .message .msg-video {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 4px;
+        }
+
+        /* ========================================================== */
+        /* TYPING INDICATOR                                            */
+        /* ========================================================== */
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            padding: 8px 14px;
+            background: #ffffff;
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            border: 1px solid #e8ecf1;
+            gap: 4px;
+        }
+
+        body.dark .typing-indicator {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        .typing-indicator .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #6c757d;
+            animation: typingDot 1.2s ease-in-out infinite;
+        }
+
+        .typing-indicator .dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator .dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingDot {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
+            30% { transform: translateY(-6px); opacity: 1; }
+        }
+
+        .typing-indicator .typing-text {
+            font-size: 12px;
+            color: #6c757d;
+            margin-left: 4px;
+        }
+
+        body.dark .typing-indicator .typing-text {
+            color: #94a3b8;
+        }
+
+        /* ========================================================== */
+        /* DATE DIVIDER                                                */
+        /* ========================================================== */
+        .date-divider {
+            text-align: center;
+            font-size: 11px;
+            color: #6c757d;
+            padding: 6px 0;
+            position: relative;
+        }
+
+        body.dark .date-divider {
+            color: #94a3b8;
+        }
+
+        .date-divider span {
+            background: #f8fafc;
+            padding: 2px 14px;
+            border-radius: 12px;
+        }
+
+        body.dark .date-divider span {
+            background: #0f172a;
+        }
+
+        /* ========================================================== */
+        /* CHAT INPUT - PROFESSIONAL                                  */
+        /* ========================================================== */
+        .chat-input-area {
+            background: #ffffff;
+            padding: 10px 12px 12px 12px;
+            border-top: 1px solid #e8ecf1;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+            flex-shrink: 0;
+            position: sticky;
+            bottom: 0;
+        }
+
+        body.dark .chat-input-area {
+            background: #1e293b;
+            border-top-color: #334155;
+        }
+
+        .chat-input-area .input-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            gap: 6px;
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 4px 4px 4px 14px;
+            border: 1.5px solid #e8ecf1;
+            transition: 0.2s;
+        }
+
+        body.dark .chat-input-area .input-wrapper {
+            background: #2a3a5a;
+            border-color: #334155;
+        }
+
+        .chat-input-area .input-wrapper:focus-within {
+            border-color: #1a237e;
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.08);
+        }
+
+        body.dark .chat-input-area .input-wrapper:focus-within {
+            border-color: #f5b342;
+            box-shadow: 0 0 0 3px rgba(245, 179, 66, 0.08);
+        }
+
+        .chat-input-area .input-wrapper textarea {
+            flex: 1;
+            border: none;
+            padding: 8px 0;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            background: transparent;
+            font-family: inherit;
+            max-height: 100px;
+            min-height: 20px;
+            color: #212529;
+        }
+
+        body.dark .chat-input-area .input-wrapper textarea {
+            color: #f8fafc;
+        }
+
+        .chat-input-area .input-wrapper textarea::placeholder {
+            color: #aabbcc;
+        }
+
+        body.dark .chat-input-area .input-wrapper textarea::placeholder {
+            color: #6c7a8a;
+        }
+
+        .chat-input-area .input-wrapper .attach-btn {
+            background: none;
+            border: none;
+            color: #6c757d;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+
+        .chat-input-area .input-wrapper .attach-btn:hover {
+            background: rgba(0, 0, 0, 0.04);
+            color: #1a237e;
+        }
+
+        body.dark .chat-input-area .input-wrapper .attach-btn:hover {
+            color: #f5b342;
+        }
+
+        .chat-input-area .send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: #ffffff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        body.dark .chat-input-area .send-btn {
+            background: linear-gradient(135deg, #f5b342, #f59e0b);
+            color: #0f172a;
+        }
+
+        .chat-input-area .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(26, 35, 126, 0.2);
+        }
+
+        body.dark .chat-input-area .send-btn:hover {
+            box-shadow: 0 4px 15px rgba(245, 179, 66, 0.2);
+        }
+
+        .chat-input-area .send-btn:active {
+            transform: scale(0.9);
+        }
+
+        .chat-input-area .send-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ========================================================== */
+        /* ATTACHMENT MENU                                             */
+        /* ========================================================== */
+        .attach-menu {
+            display: none;
+            position: absolute;
+            bottom: 70px;
+            left: 16px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e8ecf1;
+            z-index: 50;
+            min-width: 160px;
+        }
+
+        body.dark .attach-menu {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        .attach-menu.show {
+            display: block;
+        }
+
+        .attach-menu .attach-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #212529;
+        }
+
+        body.dark .attach-menu .attach-option {
+            color: #f8fafc;
+        }
+
+        .attach-menu .attach-option:hover {
+            background: #f0f4f8;
+        }
+
+        body.dark .attach-menu .attach-option:hover {
+            background: #2a3a5a;
+        }
+
+        .attach-menu .attach-option i {
+            font-size: 18px;
+            color: #1a237e;
+        }
+
+        body.dark .attach-menu .attach-option i {
+            color: #f5b342;
+        }
+
+        .attach-menu .attach-option span {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* ========================================================== */
+        /* BOTTOM NAV                                                  */
+        /* ========================================================== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 14px 0;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.08);
+            border-top: 1px solid #e8ecf1;
+            z-index: 200;
+        }
+
+        body.dark .bottom-nav {
+            background: #0f172a;
+            border-top-color: #1e293b;
+            box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #6c757d;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 12px;
+            transition: 0.2s;
+            border: none;
+            background: transparent;
+            text-decoration: none;
+        }
+
+        body.dark .nav-item {
+            color: #94a3b8;
+        }
+
+        .nav-item i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: #1a237e;
+        }
+
+        body.dark .nav-item.active {
+            color: #f5b342;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: #1a237e;
+        }
+
+        body.dark .nav-item:hover:not(.active) {
+            color: #f8fafc;
+        }
+
+        /* ========================================================== */
+        /* TOAST                                                       */
+        /* ========================================================== */
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #212529;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+            max-width: 90%;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        body.dark .toast {
+            background: #1e293b;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* ========================================================== */
+        /* RESPONSIVE                                                  */
+        /* ========================================================== */
+        @media (max-width: 480px) {
+            .message {
+                max-width: 90%;
+                font-size: 13px;
+                padding: 8px 12px;
+            }
+            .topbar .logo {
+                font-size: 15px;
+            }
+            .chat-header .admin-avatar {
+                width: 34px;
+                height: 34px;
+                font-size: 14px;
+            }
+            .chat-header .admin-details .name {
+                font-size: 13px;
+            }
+            .chat-input-area {
+                padding: 8px 10px 10px 10px;
+            }
+            .chat-input-area .send-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 15px;
+            }
+            .messages-area {
+                max-height: 45vh;
+                padding: 12px;
+            }
+            .attach-menu {
+                min-width: 130px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .message {
+                max-width: 95%;
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+            .messages-area {
+                max-height: 35vh;
+                padding: 8px;
+            }
+            .chat-input-area .input-wrapper {
+                padding: 2px 2px 2px 10px;
+            }
+            .chat-input-area .input-wrapper textarea {
+                font-size: 12px;
+                padding: 6px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                💬 Live Chat
+            </div>
+            <div class="right-icons">
+                <div class="online-status">
+                    <span class="dot"></span>
+                    <span>Online</span>
+                </div>
+                <i class="fas fa-phone" onclick="showToast('📞 Call feature coming soon!')"></i>
+                <i class="fas fa-video" onclick="showToast('📹 Video call coming soon!')"></i>
+            </div>
+        </div>
+
+        <!-- CHAT HEADER -->
+        <div class="chat-header">
+            <div class="admin-info">
+                <div class="admin-avatar">👑</div>
+                <div class="admin-details">
+                    <div class="name">PHC Support</div>
+                    <div class="status">
+                        <span class="dot-small"></span>
+                        Online - Usually replies in 1-2 min
+                    </div>
+                </div>
+            </div>
+            <div class="chat-actions">
+                <i class="fas fa-search" onclick="showToast('🔍 Search messages')"></i>
+                <i class="fas fa-ellipsis-v" onclick="showToast('📋 More options')"></i>
+            </div>
+        </div>
+
+        <!-- MESSAGES AREA -->
+        <div class="messages-area" id="messagesArea">
+
+            <!-- Date Divider -->
+            <div class="date-divider">
+                <span>Today</span>
+            </div>
+
+            <!-- Admin Welcome Message -->
+            <div class="message admin">
+                <div class="msg-sender">👑 PHC Support</div>
+                👋 Welcome to PHC Live Chat! How can we help you today?
+                <div class="msg-time">Just now</div>
+            </div>
+
+            <div class="message admin">
+                <div class="msg-sender">👑 PHC Support</div>
+                Feel free to ask about games, deposits, withdrawals, or any other questions.
+                <div class="msg-time">Just now</div>
+            </div>
+
+        </div>
+
+        <!-- TYPING INDICATOR -->
+        <div class="typing-indicator" id="typingIndicator">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="typing-text">Support is typing...</span>
+        </div>
+
+        <!-- CHAT INPUT -->
+        <div class="chat-input-area">
+            <div class="input-wrapper">
+                <button class="attach-btn" onclick="toggleAttachMenu()">
+                    <i class="fas fa-paperclip"></i>
+                </button>
+                <textarea id="chatInput" rows="1" placeholder="Type a message..." onkeydown="handleKeyPress(event)"></textarea>
+            </div>
+            <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+
+        <!-- ATTACHMENT MENU -->
+        <div class="attach-menu" id="attachMenu">
+            <div class="attach-option" onclick="attachFile('image')">
+                <i class="fas fa-image"></i>
+                <span>Photo</span>
+            </div>
+            <div class="attach-option" onclick="attachFile('video')">
+                <i class="fas fa-video"></i>
+                <span>Video</span>
+            </div>
+            <div class="attach-option" onclick="attachFile('document')">
+                <i class="fas fa-file"></i>
+                <span>Document</span>
+            </div>
+            <div class="attach-option" onclick="attachFile('emoji')">
+                <i class="fas fa-smile"></i>
+                <span>Emoji</span>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item" onclick="location.href='bet.html'">
+                <i class="fas fa-gamepad"></i> Games
+            </div>
+            <div class="nav-item" onclick="location.href='history.html'">
+                <i class="fas fa-history"></i> History
+            </div>
+            <div class="nav-item active" onclick="location.href='chat.html'">
+                <i class="fas fa-comment"></i> Chat
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="toast">Message</div>
+
+    <!-- FILE INPUT HIDDEN -->
+    <input type="file" id="fileInput" accept="image/*,video/*,.pdf,.doc,.docx" style="display:none;" onchange="handleFileUpload(event)">
+
+    <script>
+        // ==========================================================
+        // GLOBAL DARK MODE LOADER
+        // ==========================================================
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        // ==========================================================
+        // CHAT STATE
+        // ==========================================================
+        var messages = [];
+        var isTyping = false;
+        var typingTimeout = null;
+        var adminTypingTimeout = null;
+        var messageCounter = 0;
+        var isAdmin = false;
+
+        // ==========================================================
+        // HELPERS
+        // ==========================================================
+        function showToast(msg, duration) {
+            duration = duration || 3000;
+            var toast = document.getElementById('toast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(function() {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        function getCurrentUser() {
+            var localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (!localUser || !localUser.email) return null;
+            return localUser;
+        }
+
+        function getTime() {
+            var now = new Date();
+            return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function getDate() {
+            var now = new Date();
+            return now.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function scrollToBottom() {
+            var area = document.getElementById('messagesArea');
+            setTimeout(function() {
+                area.scrollTop = area.scrollHeight;
+            }, 50);
+        }
+
+        // ==========================================================
+        // TOGGLE ATTACHMENT MENU
+        // ==========================================================
+        function toggleAttachMenu() {
+            var menu = document.getElementById('attachMenu');
+            menu.classList.toggle('show');
+        }
+
+        // Close attach menu on outside click
+        document.addEventListener('click', function(e) {
+            var menu = document.getElementById('attachMenu');
+            var btn = document.querySelector('.attach-btn');
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.remove('show');
+            }
+        });
+
+        // ==========================================================
+        // ATTACH FILE
+        // ==========================================================
+        function attachFile(type) {
+            document.getElementById('attachMenu').classList.remove('show');
+
+            if (type === 'emoji') {
+                // Insert a random emoji
+                var emojis = ['😊', '😂', '❤️', '🔥', '🎉', '💰', '🏆', '🎯', '💪', '🤝', '👋', '🙏', '✨', '⭐', '💎'];
+                var input = document.getElementById('chatInput');
+                input.value += emojis[Math.floor(Math.random() * emojis.length)];
+                input.focus();
+                autoResize(input);
+                return;
+            }
+
+            var input = document.getElementById('fileInput');
+            input.accept = type === 'image' ? 'image/*' : type === 'video' ? 'video/*' : '.pdf,.doc,.docx,.txt';
+            input.click();
+        }
+
+        // ==========================================================
+        // HANDLE FILE UPLOAD
+        // ==========================================================
+        function handleFileUpload(event) {
+            var file = event.target.files[0];
+            if (!file) return;
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var data = e.target.result;
+                var isImage = file.type.startsWith('image/');
+                var isVideo = file.type.startsWith('video/');
+
+                var message = {
+                    id: ++messageCounter,
+                    sender: 'user',
+                    text: '',
+                    image: isImage ? data : null,
+                    video: isVideo ? data : null,
+                    fileName: file.name,
+                    time: getTime(),
+                    isFile: true
+                };
+
+                addMessage(message);
+                simulateAdminResponse();
+            };
+
+            reader.readAsDataURL(file);
+            event.target.value = '';
+        }
+
+        // ==========================================================
+        // AUTO-RESIZE TEXTAREA
+        // ==========================================================
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 100) + 'px';
+        }
+
+        document.getElementById('chatInput').addEventListener('input', function() {
+            autoResize(this);
+        });
+
+        // ==========================================================
+        // HANDLE KEY PRESS
+        // ==========================================================
+        function handleKeyPress(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // ==========================================================
+        // SEND MESSAGE
+        // ==========================================================
+        function sendMessage() {
+            var input = document.getElementById('chatInput');
+            var text = input.value.trim();
+
+            if (!text && !input._hasFile) {
+                showToast('⚠️ Please type a message.');
+                return;
+            }
+
+            var message = {
+                id: ++messageCounter,
+                sender: 'user',
+                text: text || '',
+                time: getTime(),
+                isFile: false
+            };
+
+            addMessage(message);
+            input.value = '';
+            input.style.height = 'auto';
+            input.focus();
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            // Simulate admin response
+            setTimeout(function() {
+                hideTypingIndicator();
+                simulateAdminResponse();
+            }, 1500);
+        }
+
+        // ==========================================================
+        // ADD MESSAGE
+        // ==========================================================
+        function addMessage(message) {
+            var area = document.getElementById('messagesArea');
+
+            // Check if we need a date divider
+            var lastDivider = area.querySelector('.date-divider:last-child');
+            var today = getDate();
+            if (!lastDivider || lastDivider.textContent.trim() !== today) {
+                var divider = document.createElement('div');
+                divider.className = 'date-divider';
+                divider.innerHTML = '<span>' + today + '</span>';
+                area.appendChild(divider);
+            }
+
+            var msgDiv = document.createElement('div');
+            msgDiv.className = 'message ' + (message.sender === 'user' ? 'user' : 'admin');
+
+            var senderName = message.sender === 'user' ? '👤 You' : '👑 PHC Support';
+
+            var content = '';
+            if (message.image) {
+                content = '<div class="msg-sender">' + senderName + '</div>' +
+                    '<img src="' + message.image + '" class="msg-image" onclick="viewImage(this.src)"/>';
+            } else if (message.video) {
+                content = '<div class="msg-sender">' + senderName + '</div>' +
+                    '<video src="' + message.video + '" class="msg-video" controls></video>';
+            } else if (message.isFile) {
+                content = '<div class="msg-sender">' + senderName + '</div>' +
+                    '<i class="fas fa-file" style="font-size:24px; margin-right:6px;"></i> ' + message.fileName;
+            } else {
+                content = '<div class="msg-sender">' + senderName + '</div>' +
+                    message.text;
+            }
+
+            content += '<div class="msg-time">' + (message.time || getTime()) + '</div>';
+
+            msgDiv.innerHTML = content;
+            area.appendChild(msgDiv);
+
+            scrollToBottom();
+        }
+
+        // ==========================================================
+        // VIEW IMAGE FULL SCREEN
+        // ==========================================================
+        function viewImage(src) {
+            var overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:pointer;';
+            overlay.onclick = function() { this.remove(); };
+
+            var img = document.createElement('img');
+            img.src = src;
+            img.style.cssText = 'max-width:95%;max-height:95%;border-radius:8px;';
+            overlay.appendChild(img);
+            document.body.appendChild(overlay);
+        }
+
+        // ==========================================================
+        // TYPING INDICATOR
+        // ==========================================================
+        function showTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'flex';
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+
+        // ==========================================================
+        // SIMULATE ADMIN RESPONSE
+        // ==========================================================
+        function simulateAdminResponse() {
+            var responses = [
+                "Thank you for your message! How can I assist you today?",
+                "I understand. Let me help you with that.",
+                "Great question! Let me explain...",
+                "I'll check that for you right away.",
+                "That's a good point. Let me look into it.",
+                "I appreciate your patience. I'm here to help!",
+                "Let me get that information for you.",
+                "I see what you mean. Here's what I can do...",
+                "Thank you for reaching out to PHC Support!",
+                "I'm happy to help! What would you like to know?"
+            ];
+
+            var response = responses[Math.floor(Math.random() * responses.length)];
+
+            // Sometimes add a longer response
+            if (Math.random() > 0.5) {
+                response += " Feel free to ask any other questions you might have.";
+            }
+
+            var message = {
+                id: ++messageCounter,
+                sender: 'admin',
+                text: response,
+                time: getTime(),
+                isFile: false
+            };
+
+            setTimeout(function() {
+                addMessage(message);
+                if (Math.random() > 0.7) {
+                    setTimeout(function() {
+                        var followUp = {
+                            id: ++messageCounter,
+                            sender: 'admin',
+                            text: "Is there anything else I can help you with? 😊",
+                            time: getTime(),
+                            isFile: false
+                        };
+                        addMessage(followUp);
+                    }, 2000);
+                }
+            }, 800);
+        }
+
+        // ==========================================================
+        // SIMULATE INCOMING MESSAGES (Live Chat Feel)
+        // ==========================================================
+        function simulateIncomingMessages() {
+            var adminMessages = [
+                "👋 Hello! Welcome to PHC Live Chat!",
+                "🎯 I see you're interested in our games!",
+                "💰 Have you tried our 8-Ball Pool game yet?",
+                "🏆 We have amazing jackpot prizes right now!",
+                "📱 Our mobile app is coming soon!",
+                "🎉 New players get a $100 bonus!",
+                "💎 VIP members get exclusive rewards!",
+                "🔥 Today's jackpot is over $50,000!",
+                "🎮 We're adding new games every week!",
+                "💬 How are you enjoying PHC Casino?"
+            ];
+
+            if (!isAdmin) {
+                isAdmin = true;
+                setTimeout(function() {
+                    var msg = adminMessages[Math.floor(Math.random() * adminMessages.length)];
+                    var message = {
+                        id: ++messageCounter,
+                        sender: 'admin',
+                        text: msg,
+                        time: getTime(),
+                        isFile: false
+                    };
+                    addMessage(message);
+                    scrollToBottom();
+                }, 1000);
+            }
+        }
+
+        // ==========================================================
+        // LOAD CHAT HISTORY
+        // ==========================================================
+        function loadChatHistory() {
+            // Load from localStorage
+            try {
+                var savedMessages = localStorage.getItem('phc_chat_messages');
+                if (savedMessages) {
+                    var parsed = JSON.parse(savedMessages);
+                    if (parsed.length > 0) {
+                        // Clear default messages
+                        var area = document.getElementById('messagesArea');
+                        area.innerHTML = '';
+                        parsed.forEach(function(msg) {
+                            addMessage(msg);
+                        });
+                        scrollToBottom();
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.log('No saved chat history');
+            }
+
+            // Default messages if no history
+            setTimeout(function() {
+                simulateIncomingMessages();
+            }, 3000);
+        }
+
+        // ==========================================================
+        // SAVE CHAT HISTORY
+        // ==========================================================
+        function saveChatHistory() {
+            var area = document.getElementById('messagesArea');
+            var messageElements = area.querySelectorAll('.message');
+            var messages = [];
+
+            messageElements.forEach(function(el) {
+                var sender = el.classList.contains('user') ? 'user' : 'admin';
+                var text = el.querySelector('.msg-sender') ? el.textContent.replace(/👤 You|👑 PHC Support/g, '').trim() :
+                    '';
+
+                // Try to extract text
+                var textContent = '';
+                var children = el.childNodes;
+                children.forEach(function(child) {
+                    if (child.nodeType === 3) {
+                        textContent += child.textContent;
+                    }
+                });
+
+                var time = el.querySelector('.msg-time') ? el.querySelector('.msg-time').textContent : getTime();
+
+                messages.push({
+                    sender: sender,
+                    text: textContent.replace(time, '').trim() || 'Message',
+                    time: time
+                });
+            });
+
+            try {
+                localStorage.setItem('phc_chat_messages', JSON.stringify(messages));
+            } catch (e) {
+                console.log('Could not save chat history');
+            }
+        }
+
+        // ==========================================================
+        // SAVE HISTORY ON UNLOAD
+        // ==========================================================
+        window.addEventListener('beforeunload', saveChatHistory);
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadChatHistory();
+
+            // Auto-resize textarea
+            var textarea = document.getElementById('chatInput');
+            textarea.addEventListener('input', function() {
+                autoResize(this);
+            });
+
+            console.log('💬 Live Chat loaded!');
+            console.log('👑 Admin support is online!');
+        });
+
+        // Make functions global
+        window.sendMessage = sendMessage;
+        window.handleKeyPress = handleKeyPress;
+        window.toggleAttachMenu = toggleAttachMenu;
+        window.attachFile = attachFile;
+        window.handleFileUpload = handleFileUpload;
+        window.viewImage = viewImage;
+        window.showToast = showToast;
+    </script>
+
+</body>
+</html>

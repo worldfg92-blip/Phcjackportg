@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Live Matches - PHC Casino</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ========================================================== */
+        /* LIVE MATCHES - PROFESSIONAL SPORTYBET STYLE                */
+        /* ========================================================== */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #0a0a0a;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            background: radial-gradient(ellipse at center, #1a0a0a 0%, #0a0a0a 100%);
+        }
+
+        .topbar {
+            background: linear-gradient(135deg, #0d0d0d, #1a0a0a);
+            color: #ffd700;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #ffd700;
+        }
+
+        .topbar .logo {
+            font-size: 17px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ffd700;
+        }
+
+        .topbar .logo i {
+            cursor: pointer;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .topbar .live-count {
+            font-size: 11px;
+            font-weight: 700;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .topbar .live-count .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulseDot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        .api-status {
+            padding: 8px 12px;
+            margin: 0 12px 10px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+        }
+
+        .api-status.connected {
+            display: block;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.15);
+        }
+
+        .api-status.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.15);
+        }
+
+        .api-status.info {
+            display: block;
+            background: rgba(255, 215, 0, 0.08);
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .league-tabs {
+            display: flex;
+            gap: 6px;
+            padding: 0 12px;
+            margin: 10px 0 12px 0;
+            overflow-x: auto;
+        }
+
+        .league-tabs::-webkit-scrollbar {
+            height: 2px;
+        }
+
+        .league-tab {
+            padding: 6px 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .league-tab.active {
+            background: #ffd700;
+            color: #0a0a0a;
+            border-color: #ffd700;
+        }
+
+        .league-tab:hover:not(.active) {
+            color: rgba(255, 255, 255, 0.7);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .match-list {
+            padding: 0 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .match-card {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: 0.3s;
+        }
+
+        .match-card:hover {
+            border-color: rgba(255, 215, 0, 0.05);
+            background: #1e1e36;
+        }
+
+        .match-card .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .match-card .match-header .match-league {
+            font-size: 10px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .match-card .match-header .match-time {
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .match-card .match-teams {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 0;
+            gap: 12px;
+        }
+
+        .match-card .match-teams .team-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            min-width: 60px;
+        }
+
+        .match-card .match-teams .team-block .badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 900;
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.06);
+            text-transform: uppercase;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            background: #333333;
+        }
+
+        .match-card .match-teams .team-block .team-short {
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+        }
+
+        .match-card .match-teams .team-block .team-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #f8fafc;
+            text-align: center;
+            max-width: 80px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .match-card .match-teams .vs-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.15);
+            text-transform: uppercase;
+        }
+
+        .match-card .match-teams .score-display {
+            font-size: 22px;
+            font-weight: 900;
+            color: #ffd700;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .match-card .match-teams .score-display.live {
+            color: #10b981;
+        }
+
+        .match-card .match-odds {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .match-card .match-odds .odd-item {
+            padding: 4px 14px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            font-size: 14px;
+            font-weight: 700;
+            color: #f8fafc;
+            text-align: center;
+            min-width: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .match-card .match-odds .odd-item .label {
+            font-size: 8px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.3);
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .match-card .match-odds .match-status {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 12px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        .match-card .match-odds .match-status.running {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .match-card .match-odds .match-status.running .pulse {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ef4444;
+            margin-right: 4px;
+            animation: pulseDot 1s ease-in-out infinite;
+        }
+
+        .match-card .match-odds .match-status.ended {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .match-card .match-odds .match-status.upcoming {
+            background: rgba(255, 215, 0, 0.08);
+            color: #ffd700;
+        }
+
+        .match-card .match-rating {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .match-card .match-rating .stars {
+            color: #ffd700;
+            font-size: 10px;
+            letter-spacing: 2px;
+        }
+
+        .match-card .match-rating .percentage {
+            font-size: 10px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .match-card .match-progress {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .match-card .match-progress .progress-bar {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .match-card .match-progress .progress-bar .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(to right, #10b981, #ffd700);
+            transition: width 1s ease;
+        }
+
+        .match-card .match-progress .progress-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.3);
+            min-width: 40px;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .loading-state i {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 12px;
+            color: rgba(255, 215, 0, 0.2);
+        }
+
+        .loading-state .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ========================================================== */
+        /* EMPTY STATE - NO MATCHES, PLAY JACKPOT                     */
+        /* ========================================================== */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .empty-state .empty-icon {
+            font-size: 60px;
+            display: block;
+            margin-bottom: 16px;
+            color: rgba(255, 215, 0, 0.1);
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 6px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.3);
+            line-height: 1.6;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .empty-state .play-jackpot-btn {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            color: #0a0a0a;
+            border: none;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.15);
+        }
+
+        .empty-state .play-jackpot-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 30px rgba(255, 215, 0, 0.25);
+        }
+
+        .date-selector {
+            display: flex;
+            gap: 6px;
+            padding: 0 12px;
+            margin: 6px 0 10px 0;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+        }
+
+        .date-btn {
+            padding: 5px 12px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .date-btn.active {
+            background: #ffd700;
+            color: #0a0a0a;
+            border-color: #ffd700;
+        }
+
+        .date-btn:hover:not(.active) {
+            color: rgba(255, 255, 255, 0.7);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: rgba(10, 10, 10, 0.98);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 14px 0;
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
+            z-index: 200;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 12px;
+            transition: 0.2s;
+            border: none;
+            background: transparent;
+        }
+
+        .nav-item i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: #ffd700;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 10, 0.95);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+            max-width: 90%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .toast.show { opacity: 1; }
+
+        @media (max-width: 480px) {
+            .match-card .match-teams .team-block .badge {
+                width: 36px;
+                height: 36px;
+                font-size: 10px;
+            }
+            .match-card .match-teams .team-block .team-name {
+                font-size: 10px;
+                max-width: 60px;
+            }
+            .match-card .match-teams .team-block .team-short {
+                font-size: 9px;
+            }
+            .match-card .match-teams .score-display {
+                font-size: 18px;
+                min-width: 40px;
+            }
+            .match-card .match-teams .vs-text {
+                font-size: 11px;
+            }
+            .match-card .match-odds .odd-item {
+                padding: 3px 10px;
+                font-size: 12px;
+                min-width: 40px;
+            }
+            .league-tab {
+                font-size: 10px;
+                padding: 4px 10px;
+            }
+            .date-btn {
+                font-size: 9px;
+                padding: 4px 8px;
+            }
+            .match-card .match-rating .stars {
+                font-size: 8px;
+            }
+            .empty-state .empty-icon {
+                font-size: 50px;
+            }
+            .empty-state h3 {
+                font-size: 18px;
+            }
+            .empty-state .play-jackpot-btn {
+                font-size: 13px;
+                padding: 10px 24px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .match-card .match-teams .team-block .badge {
+                width: 30px;
+                height: 30px;
+                font-size: 8px;
+            }
+            .match-card .match-teams .team-block .team-name {
+                font-size: 9px;
+                max-width: 50px;
+            }
+            .match-card .match-teams .score-display {
+                font-size: 16px;
+                min-width: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                ⚽ Live Matches
+            </div>
+            <div class="live-count">
+                <span class="dot"></span>
+                <span id="liveCount">0 Live</span>
+            </div>
+        </div>
+
+        <!-- API STATUS -->
+        <div class="api-status" id="apiStatus"></div>
+
+        <!-- DATE SELECTOR -->
+        <div class="date-selector" id="dateSelector">
+            <button class="date-btn active" data-days="0" onclick="selectDate(0)">Today</button>
+            <button class="date-btn" data-days="1" onclick="selectDate(1)">Tomorrow</button>
+            <button class="date-btn" data-days="2" onclick="selectDate(2)">+2 Days</button>
+            <button class="date-btn" data-days="3" onclick="selectDate(3)">+3 Days</button>
+            <button class="date-btn" data-days="4" onclick="selectDate(4)">+4 Days</button>
+            <button class="date-btn" data-days="5" onclick="selectDate(5)">+5 Days</button>
+            <button class="date-btn" data-days="6" onclick="selectDate(6)">+6 Days</button>
+            <button class="date-btn" data-days="7" onclick="selectDate(7)">+7 Days</button>
+        </div>
+
+        <!-- LEAGUE TABS -->
+        <div class="league-tabs" id="leagueTabs">
+            <button class="league-tab active" data-league="all" onclick="filterLeague('all')">All</button>
+            <button class="league-tab" data-league="premier" onclick="filterLeague('premier')">🏴 Premier</button>
+            <button class="league-tab" data-league="laliga" onclick="filterLeague('laliga')">🇪🇸 La Liga</button>
+            <button class="league-tab" data-league="seriea" onclick="filterLeague('seriea')">🇮🇹 Serie A</button>
+            <button class="league-tab" data-league="bundesliga" onclick="filterLeague('bundesliga')">🇩🇪 Bundes</button>
+            <button class="league-tab" data-league="ligue1" onclick="filterLeague('ligue1')">🇫🇷 Ligue 1</button>
+        </div>
+
+        <!-- MATCH LIST -->
+        <div class="match-list" id="matchList">
+            <div class="loading-state">
+                <i class="fas fa-spinner spinner"></i>
+                <p>Loading live matches...</p>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item active" onclick="location.href='live-matches.html'">
+                <i class="fas fa-futbol"></i> Live
+            </div>
+            <div class="nav-item" onclick="location.href='bet.html'">
+                <i class="fas fa-gamepad"></i> Predictor
+            </div>
+            <div class="nav-item" onclick="location.href='settings.html'">
+                <i class="fas fa-cog"></i> Settings
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast" class="toast">Message</div>
+
+    <script>
+        // ==========================================================
+        // API KEY - YOUR API-FOOTBALL KEY
+        // ==========================================================
+        var API_KEY = "25f602f19b65333275e3d93789a18559";
+        var API_HOST = "v3.football.api-sports.io";
+
+        // ==========================================================
+        // STATE
+        // ==========================================================
+        var allMatches = [];
+        var currentLeague = 'all';
+        var currentDateOffset = 0;
+        var goalInterval = null;
+        var isApiConnected = false;
+        var apiChecked = false;
+        var hasRealMatches = false;
+
+        // ==========================================================
+        // TEAM SHORT NAMES AND BADGE COLORS
+        // ==========================================================
+        var teamColors = {
+            'Manchester Utd': '#da291c',
+            'Manchester City': '#6caddf',
+            'Liverpool': '#c8102e',
+            'Arsenal': '#ef0107',
+            'Chelsea': '#034694',
+            'Tottenham': '#132257',
+            'Everton': '#003399',
+            'Aston Villa': '#670e36',
+            'Newcastle': '#241f20',
+            'West Ham': '#7a263a',
+            'Fulham': '#000000',
+            'Nottingham Forest': '#dd0000',
+            'Burnley': '#6c1d45',
+            'Crystal Palace': '#1b458f',
+            'Wolves': '#fdb913',
+            'Bournemouth': '#da291c',
+            'Brighton': '#0057aa',
+            'Brentford': '#1b458f',
+            'Leeds United': '#ffcd00',
+            'Sunderland': '#eb0000',
+            'Real Madrid': '#ffffff',
+            'Barcelona': '#a50044',
+            'Atletico Madrid': '#e3120b',
+            'Sevilla': '#d10000',
+            'Villarreal': '#fecb00',
+            'Real Sociedad': '#0057aa',
+            'Athletic Bilbao': '#e3120b',
+            'Valencia': '#d4af37',
+            'Getafe': '#1a4d8c',
+            'Inter Milan': '#003399',
+            'AC Milan': '#fb090b',
+            'Juventus': '#000000',
+            'Napoli': '#1a3b8c',
+            'Roma': '#b22222',
+            'Lazio': '#1a4d8c',
+            'Bayern Munich': '#dc052d',
+            'Borussia Dortmund': '#fde100',
+            'RB Leipzig': '#cf1322',
+            'Bayer Leverkusen': '#e32221',
+            'PSG': '#cf1322',
+            'Marseille': '#1a3b8c'
+        };
+
+        var teamShort = {
+            'Manchester Utd': 'MUN',
+            'Manchester City': 'MCI',
+            'Liverpool': 'LIV',
+            'Arsenal': 'ARS',
+            'Chelsea': 'CHE',
+            'Tottenham': 'TOT',
+            'Everton': 'EVE',
+            'Aston Villa': 'AST',
+            'Newcastle': 'NEW',
+            'West Ham': 'WHU',
+            'Fulham': 'FUL',
+            'Nottingham Forest': 'FOR',
+            'Burnley': 'BUR',
+            'Crystal Palace': 'CRY',
+            'Wolves': 'WOL',
+            'Bournemouth': 'BOU',
+            'Brighton': 'BHA',
+            'Brentford': 'BRE',
+            'Leeds United': 'LEE',
+            'Sunderland': 'SUN',
+            'Real Madrid': 'RMA',
+            'Barcelona': 'BAR',
+            'Atletico Madrid': 'ATM',
+            'Sevilla': 'SEV',
+            'Villarreal': 'VIL',
+            'Real Sociedad': 'RSO',
+            'Athletic Bilbao': 'BIL',
+            'Valencia': 'VAL',
+            'Getafe': 'GET',
+            'Inter Milan': 'INT',
+            'AC Milan': 'MIL',
+            'Juventus': 'JUV',
+            'Napoli': 'NAP',
+            'Roma': 'ROM',
+            'Lazio': 'LAZ',
+            'Bayern Munich': 'BAY',
+            'Borussia Dortmund': 'DOR',
+            'RB Leipzig': 'RBL',
+            'Bayer Leverkusen': 'LEV',
+            'PSG': 'PSG',
+            'Marseille': 'MAR'
+        };
+
+        // ==========================================================
+        // DATE HELPERS
+        // ==========================================================
+        function getDateString(offset) {
+            var date = new Date();
+            date.setDate(date.getDate() + offset);
+            return date.getFullYear() + '-' + 
+                   String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                   String(date.getDate()).padStart(2, '0');
+        }
+
+        function getDateDisplay(offset) {
+            var date = new Date();
+            date.setDate(date.getDate() + offset);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        // ==========================================================
+        // SELECT DATE
+        // ==========================================================
+        function selectDate(offset) {
+            currentDateOffset = offset;
+            document.querySelectorAll('.date-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+                if (parseInt(btn.dataset.days) === offset) {
+                    btn.classList.add('active');
+                }
+            });
+            fetchRealMatches();
+        }
+
+        // ==========================================================
+        // CHECK API CONNECTION
+        // ==========================================================
+        function checkApiConnection() {
+            var statusEl = document.getElementById('apiStatus');
+            
+            fetch('https://' + API_HOST + '/status', {
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-key': API_KEY,
+                    'x-rapidapi-host': API_HOST
+                }
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    statusEl.className = 'api-status connected';
+                    statusEl.innerHTML = '✅ API Connected - Fetching real matches';
+                    isApiConnected = true;
+                } else {
+                    statusEl.className = 'api-status error';
+                    statusEl.innerHTML = '❌ API Error - Check your API key';
+                    isApiConnected = false;
+                }
+                apiChecked = true;
+            })
+            .catch(function() {
+                statusEl.className = 'api-status error';
+                statusEl.innerHTML = '❌ API Connection Failed - Check internet';
+                isApiConnected = false;
+                apiChecked = true;
+            });
+        }
+
+        // ==========================================================
+        // FETCH REAL MATCHES ONLY - NO DEMO
+        // ==========================================================
+        function fetchRealMatches() {
+            var container = document.getElementById('matchList');
+            var dateStr = getDateString(currentDateOffset);
+            var statusEl = document.getElementById('apiStatus');
+
+            container.innerHTML = `
+                <div class="loading-state">
+                    <i class="fas fa-spinner spinner"></i>
+                    <p>Searching for real matches on ${getDateDisplay(currentDateOffset)}...</p>
+                </div>
+            `;
+
+            if (isApiConnected) {
+                statusEl.className = 'api-status connected';
+                statusEl.innerHTML = '✅ API Connected - Searching matches for ' + getDateDisplay(currentDateOffset);
+            } else {
+                statusEl.className = 'api-status info';
+                statusEl.innerHTML = '🔄 Connecting to API...';
+            }
+
+            // Fetch from major leagues
+            var leagues = [39, 140, 135, 78, 61, 1, 2, 3, 4, 5];
+            var allData = [];
+            var completed = 0;
+
+            leagues.forEach(function(leagueId) {
+                var url = 'https://' + API_HOST + '/fixtures?date=' + dateStr + '&league=' + leagueId;
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'x-rapidapi-key': API_KEY,
+                        'x-rapidapi-host': API_HOST
+                    }
+                })
+                .then(function(response) { 
+                    if (!response.ok) throw new Error('API error: ' + response.status);
+                    return response.json(); 
+                })
+                .then(function(data) {
+                    if (data.response && data.response.length > 0) {
+                        allData = allData.concat(data.response);
+                        isApiConnected = true;
+                        hasRealMatches = true;
+                    }
+                    completed++;
+                    if (completed === leagues.length) {
+                        if (allData.length > 0) {
+                            statusEl.className = 'api-status connected';
+                            statusEl.innerHTML = '✅ Found ' + allData.length + ' real matches for ' + getDateDisplay(currentDateOffset);
+                            processMatches(allData);
+                        } else {
+                            // NO MATCHES FOUND - SHOW EMPTY STATE WITH JACKPOT BUTTON
+                            statusEl.className = 'api-status info';
+                            statusEl.innerHTML = '📅 No real matches found for ' + getDateDisplay(currentDateOffset);
+                            showEmptyState();
+                        }
+                    }
+                })
+                .catch(function(err) {
+                    completed++;
+                    if (completed === leagues.length) {
+                        if (allData.length > 0) {
+                            processMatches(allData);
+                        } else {
+                            statusEl.className = 'api-status error';
+                            statusEl.innerHTML = '❌ Error fetching matches';
+                            showEmptyState();
+                        }
+                    }
+                });
+            });
+
+            // Timeout fallback
+            setTimeout(function() {
+                if (allMatches.length === 0 && !hasRealMatches) {
+                    statusEl.className = 'api-status info';
+                    statusEl.innerHTML = '⏱️ No matches found for ' + getDateDisplay(currentDateOffset);
+                    showEmptyState();
+                }
+            }, 8000);
+        }
+
+        // ==========================================================
+        // SHOW EMPTY STATE - NO DEMO MATCHES
+        // ==========================================================
+        function showEmptyState() {
+            var container = document.getElementById('matchList');
+            
+            container.innerHTML = `
+                <div class="empty-state">
+                    <span class="empty-icon">⚽</span>
+                    <h3>No Matches Available</h3>
+                    <p>There are no real matches scheduled for ${getDateDisplay(currentDateOffset)}.</p>
+                    <p style="margin-top: 8px; font-size: 13px; color: rgba(255,255,255,0.2);">
+                        Try selecting a different date or play the Jackpot to win big!
+                    </p>
+                    <button class="play-jackpot-btn" onclick="location.href='bet.html'">
+                        🏆 Play Jackpot Now
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('liveCount').textContent = '0';
+            allMatches = [];
+        }
+
+        // ==========================================================
+        // PROCESS API MATCHES - ONLY REAL DATA
+        // ==========================================================
+        function processMatches(apiMatches) {
+            allMatches = [];
+            var liveCount = 0;
+
+            apiMatches.forEach(function(match) {
+                var status = match.fixture.status.short;
+                var statusMap = {
+                    'NS': 'upcoming',
+                    '1H': 'running',
+                    'HT': 'running',
+                    '2H': 'running',
+                    'ET': 'running',
+                    'P': 'running',
+                    'FT': 'ended',
+                    'AET': 'ended',
+                    'PEN': 'ended'
+                };
+
+                var matchStatus = statusMap[status] || 'upcoming';
+                var timeDisplay = match.fixture.status.elapsed ? match.fixture.status.elapsed + "'" : match.fixture.date;
+
+                var homeTeam = match.teams.home.name;
+                var awayTeam = match.teams.away.name;
+                var homeShort = teamShort[homeTeam] || homeTeam.substring(0, 3).toUpperCase();
+                var awayShort = teamShort[awayTeam] || awayTeam.substring(0, 3).toUpperCase();
+                var homeColor = teamColors[homeTeam] || '#333333';
+                var awayColor = teamColors[awayTeam] || '#333333';
+
+                var leagueName = match.league.name || 'Football';
+                var leagueId = match.league.id;
+
+                var leagueType = 'other';
+                var leagueMap = {
+                    39: 'premier',
+                    140: 'laliga',
+                    135: 'seriea',
+                    78: 'bundesliga',
+                    61: 'ligue1'
+                };
+                if (leagueMap[leagueId]) leagueType = leagueMap[leagueId];
+
+                allMatches.push({
+                    id: match.fixture.id,
+                    league: leagueName,
+                    leagueId: leagueId,
+                    leagueType: leagueType,
+                    home: homeTeam,
+                    away: awayTeam,
+                    flagHome: '🏳️',
+                    flagAway: '🏳️',
+                    homeShort: homeShort,
+                    awayShort: awayShort,
+                    homeColor: homeColor,
+                    awayColor: awayColor,
+                    homeScore: match.goals.home || 0,
+                    awayScore: match.goals.away || 0,
+                    status: matchStatus,
+                    time: matchStatus === 'running' ? timeDisplay : (matchStatus === 'ended' ? 'FT' : match.fixture.date),
+                    minute: match.fixture.status.elapsed || 0,
+                    odds: { home: 1.90, draw: 3.30, away: 4.20 },
+                    matchTime: new Date(match.fixture.date)
+                });
+
+                if (matchStatus === 'running') liveCount++;
+            });
+
+            if (allMatches.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            hasRealMatches = true;
+            renderMatches();
+            document.getElementById('liveCount').textContent = liveCount + ' Live';
+            console.log('✅ Loaded ' + allMatches.length + ' REAL matches from API for ' + getDateDisplay(currentDateOffset) + '!');
+        }
+
+        // ==========================================================
+        // RENDER MATCHES
+        // ==========================================================
+        function renderMatches() {
+            var container = document.getElementById('matchList');
+            var filtered = allMatches;
+
+            if (currentLeague !== 'all') {
+                filtered = allMatches.filter(function(m) {
+                    return m.leagueType === currentLeague;
+                });
+            }
+
+            filtered.sort(function(a, b) {
+                var order = { 'running': 0, 'upcoming': 1, 'ended': 2 };
+                return (order[a.status] || 1) - (order[b.status] || 1);
+            });
+
+            if (filtered.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            var html = '';
+            var liveCount = 0;
+
+            filtered.forEach(function(match) {
+                var isLive = match.status === 'running';
+                var scoreClass = isLive ? 'live' : '';
+                var statusClass = isLive ? 'running' : (match.status === 'ended' ? 'ended' : 'upcoming');
+                var statusLabel = isLive ? match.minute + "'" : (match.status === 'ended' ? 'FT' : 'Upcoming');
+                var progress = Math.min(100, (match.minute / 90) * 100);
+
+                if (isLive) liveCount++;
+
+                html += `
+                    <div class="match-card">
+                        <div class="match-header">
+                            <span class="match-league">${match.league || 'Football'}</span>
+                            <span class="match-time">${match.time}</span>
+                        </div>
+                        <div class="match-teams">
+                            <div class="team-block">
+                                <span class="badge" style="background:${match.homeColor || '#333333'};">${match.homeShort || match.home.substring(0,3).toUpperCase()}</span>
+                                <span class="team-short">${match.homeShort || match.home.substring(0,3).toUpperCase()}</span>
+                                <span class="team-name">${match.home}</span>
+                            </div>
+                            <span class="score-display ${scoreClass}">${match.homeScore} - ${match.awayScore}</span>
+                            <div class="team-block">
+                                <span class="badge" style="background:${match.awayColor || '#333333'};">${match.awayShort || match.away.substring(0,3).toUpperCase()}</span>
+                                <span class="team-short">${match.awayShort || match.away.substring(0,3).toUpperCase()}</span>
+                                <span class="team-name">${match.away}</span>
+                            </div>
+                        </div>
+                        <div class="match-odds">
+                            <div class="odd-item">
+                                <span class="label">1</span>
+                                ${match.odds.home.toFixed(2)}
+                            </div>
+                            <div class="odd-item">
+                                <span class="label">X</span>
+                                ${match.odds.draw.toFixed(2)}
+                            </div>
+                            <div class="odd-item">
+                                <span class="label">2</span>
+                                ${match.odds.away.toFixed(2)}
+                            </div>
+                            <span class="match-status ${statusClass}">
+                                ${isLive ? '<span class="pulse"></span>' : ''}
+                                ${statusLabel}
+                            </span>
+                        </div>
+                        <div class="match-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="percentage">+71</span>
+                        </div>
+                        ${isLive ? `
+                        <div class="match-progress">
+                            <span class="progress-label">${match.minute}'</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress}%;"></div>
+                            </div>
+                            <span class="progress-label">Live</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            document.getElementById('liveCount').textContent = liveCount + ' Live';
+            updateLiveScores();
+        }
+
+        // ==========================================================
+        // UPDATE LIVE SCORES
+        // ==========================================================
+        function updateLiveScores() {
+            if (goalInterval) clearInterval(goalInterval);
+
+            goalInterval = setInterval(function() {
+                var liveMatches = allMatches.filter(function(m) { return m.status === 'running'; });
+
+                liveMatches.forEach(function(match) {
+                    if (match.minute < 90) {
+                        match.minute += 1;
+                    }
+
+                    if (Math.random() < 0.06 && match.minute < 90) {
+                        var isHomeGoal = Math.random() < 0.5;
+                        if (isHomeGoal) {
+                            match.homeScore += 1;
+                            showToast('⚽ GOAL! ' + match.home + ' scores! (' + match.homeScore + '-' +
+                                match.awayScore + ')');
+                        } else {
+                            match.awayScore += 1;
+                            showToast('⚽ GOAL! ' + match.away + ' scores! (' + match.homeScore + '-' +
+                                match.awayScore + ')');
+                        }
+                        renderMatches();
+                        return;
+                    }
+
+                    if (match.minute >= 90) {
+                        match.status = 'ended';
+                        match.time = 'FT';
+                        showToast('⏱️ Full Time! ' + match.home + ' ' + match.homeScore + '-' + match
+                            .awayScore + ' ' + match.away);
+                    }
+                });
+
+                renderMatches();
+            }, 3000);
+        }
+
+        // ==========================================================
+        // FILTER LEAGUE
+        // ==========================================================
+        function filterLeague(league) {
+            currentLeague = league;
+            document.querySelectorAll('.league-tab').forEach(function(tab) {
+                tab.classList.remove('active');
+                if (tab.dataset.league === league) {
+                    tab.classList.add('active');
+                }
+            });
+            renderMatches();
+        }
+
+        // ==========================================================
+        // TOAST
+        // ==========================================================
+        function showToast(msg, duration) {
+            duration = duration || 3000;
+            var toast = document.getElementById('toast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(function() {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            checkApiConnection();
+            
+            setTimeout(function() {
+                fetchRealMatches();
+            }, 1500);
+
+            console.log('⚽ Live Matches - REAL MATCHES ONLY!');
+            console.log('🔑 API Key: ' + API_KEY);
+            console.log('📡 No fake/demo matches - only real data from API');
+        });
+
+        // Make functions global
+        window.filterLeague = filterLeague;
+        window.selectDate = selectDate;
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>PHC Jackpot – Create Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+    body { background:#e8ecf1; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+
+    .auth-container {
+      max-width:440px;
+      width:100%;
+      background:#fff;
+      border-radius:40px;
+      padding:32px 28px 36px;
+      box-shadow:0 20px 60px rgba(0,0,0,0.1);
+      border:1px solid rgba(0,0,0,0.02);
+    }
+
+    .auth-logo {
+      text-align:center;
+      margin-bottom:28px;
+    }
+    .auth-logo .logo-icon {
+      background:#004b87;
+      width:64px;
+      height:64px;
+      border-radius:18px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      color:#f5b342;
+      font-size:28px;
+      font-weight:900;
+      box-shadow:0 4px 20px rgba(0,75,135,0.2);
+      margin-bottom:10px;
+    }
+    .auth-logo h1 {
+      font-size:24px;
+      font-weight:800;
+      color:#0a1a2a;
+      letter-spacing:-0.5px;
+    }
+    .auth-logo h1 small {
+      display:block;
+      font-size:12px;
+      font-weight:500;
+      color:#5a7a9a;
+      letter-spacing:0.5px;
+      margin-top:2px;
+    }
+
+    .auth-form { display:flex; flex-direction:column; gap:14px; }
+    .auth-form .form-group { display:flex; flex-direction:column; gap:4px; }
+    .auth-form label { font-size:13px; font-weight:600; color:#2a4a6a; }
+    .auth-form .input-wrapper {
+      position:relative;
+      display:flex;
+      align-items:center;
+      background:#f5f8fc;
+      border-radius:14px;
+      border:1.5px solid #e6edf6;
+      transition:0.2s;
+    }
+    .auth-form .input-wrapper:focus-within {
+      border-color:#004b87;
+      box-shadow:0 0 0 3px rgba(0,75,135,0.08);
+    }
+    .auth-form .input-wrapper i {
+      position:absolute;
+      left:14px;
+      color:#7a8a9a;
+      font-size:16px;
+    }
+    .auth-form .input-wrapper input {
+      width:100%;
+      padding:14px 14px 14px 44px;
+      border:none;
+      background:transparent;
+      font-size:15px;
+      outline:none;
+      color:#0a1a2a;
+    }
+    .auth-form .input-wrapper input::placeholder { color:#aabbcc; }
+    .auth-form .input-wrapper .toggle-pass {
+      position:absolute;
+      right:14px;
+      color:#7a8a9a;
+      cursor:pointer;
+      font-size:16px;
+    }
+    .auth-form .input-wrapper .toggle-pass:hover { color:#004b87; }
+
+    .auth-btn {
+      background:#004b87;
+      color:#fff;
+      border:none;
+      border-radius:30px;
+      padding:16px;
+      font-size:17px;
+      font-weight:700;
+      cursor:pointer;
+      transition:0.2s;
+      box-shadow:0 4px 16px rgba(0,75,135,0.2);
+      margin-top:4px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    .auth-btn:hover { background:#003d70; transform:scale(1.01); }
+    .auth-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+    .auth-divider {
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin:16px 0 10px;
+      color:#7a8a9a;
+      font-size:13px;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content:'';
+      flex:1;
+      height:1px;
+      background:#e6edf6;
+    }
+
+    .auth-switch {
+      text-align:center;
+      font-size:14px;
+      color:#5a7a9a;
+    }
+    .auth-switch a {
+      color:#004b87;
+      font-weight:700;
+      text-decoration:none;
+      cursor:pointer;
+    }
+    .auth-switch a:hover { text-decoration:underline; }
+
+    .auth-error {
+      color:#b33a4a;
+      font-size:13px;
+      font-weight:600;
+      display:none;
+      text-align:center;
+      padding:8px 12px;
+      background:#fde8e8;
+      border-radius:12px;
+    }
+    .auth-success {
+      color:#1a8a4a;
+      font-size:13px;
+      font-weight:600;
+      display:none;
+      text-align:center;
+      padding:8px 12px;
+      background:#e6f5ed;
+      border-radius:12px;
+    }
+
+    .toast {
+      position:fixed;
+      bottom:30px;
+      left:50%;
+      transform:translateX(-50%);
+      background:#0a1a2a;
+      color:#fff;
+      padding:14px 24px;
+      border-radius:40px;
+      font-weight:600;
+      font-size:14px;
+      z-index:9999;
+      box-shadow:0 8px 30px rgba(0,0,0,0.2);
+      animation:toastIn 0.3s ease;
+      display:none;
+      max-width:90%;
+      text-align:center;
+    }
+    .toast.show { display:block; }
+    @keyframes toastIn { from { opacity:0; transform:translateX(-50%) translateY(20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    @media (max-width:480px) {
+      .auth-container { padding:24px 18px 28px; border-radius:28px; }
+      .auth-logo .logo-icon { width:52px; height:52px; font-size:22px; }
+      .row { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-container">
+  <div class="auth-logo">
+    <div class="logo-icon">PHC</div>
+    <h1>PHC Jackpot <small>✦ PREMIUM BANKING</small></h1>
+  </div>
+
+  <div class="auth-form">
+    <div class="row">
+      <div class="form-group">
+        <label>First Name</label>
+        <div class="input-wrapper"><i class="fas fa-user"></i><input type="text" id="regFirstName" placeholder="First" /></div>
+      </div>
+      <div class="form-group">
+        <label>Last Name</label>
+        <div class="input-wrapper"><i class="fas fa-user"></i><input type="text" id="regLastName" placeholder="Last" /></div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Email Address</label>
+      <div class="input-wrapper"><i class="fas fa-envelope"></i><input type="email" id="regEmail" placeholder="you@example.com" /></div>
+    </div>
+
+    <div class="form-group">
+      <label>Phone Number</label>
+      <div class="input-wrapper"><i class="fas fa-phone"></i><input type="tel" id="regPhone" placeholder="+1 (555) 000-0000" /></div>
+    </div>
+
+    <div class="form-group">
+      <label>Address</label>
+      <div class="input-wrapper"><i class="fas fa-home"></i><input type="text" id="regAddress" placeholder="123 Main St, City, State" /></div>
+    </div>
+
+    <div class="form-group">
+      <label>Create Password</label>
+      <div class="input-wrapper">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="regPassword" placeholder="Min 8 characters" />
+        <span class="toggle-pass" onclick="togglePassword('regPassword', this)"><i class="fas fa-eye"></i></span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <div class="input-wrapper">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="regConfirmPassword" placeholder="Confirm your password" />
+        <span class="toggle-pass" onclick="togglePassword('regConfirmPassword', this)"><i class="fas fa-eye"></i></span>
+      </div>
+    </div>
+
+    <div class="auth-error" id="regError">Please fix all errors.</div>
+    <div class="auth-success" id="regSuccess">Account created successfully! Redirecting to login...</div>
+    <button class="auth-btn" id="createBtn"><i class="fas fa-user-plus"></i> Create Account</button>
+  </div>
+
+  <div class="auth-divider">or</div>
+  <div class="auth-switch">
+    Already have an account? <a href="login.html">Login</a>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ================================================================
+  // SUPABASE CONFIG (YOUR EXACT KEYS)
+  // ================================================================
+  const SUPABASE_URL = "https://gcesrhfyupmkrevaqpfr.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjZXNyaGZ5dXBta3JldmFxcGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2NzU2MTgsImV4cCI6MjA2NDI1MTYxOH0._CCbqUaLqtnxY2mT9bMhDp5z4d2Rl46Z5j7-QW3iK-0";
+
+  // ================================================================
+  // HELPERS
+  // ================================================================
+  function showToast(msg, duration = 3000) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => toast.classList.remove('show'), duration);
+  }
+
+  function togglePassword(inputId, el) {
+    const input = document.getElementById(inputId);
+    if (input.type === 'password') {
+      input.type = 'text';
+      el.innerHTML = '<i class="fas fa-eye-slash"></i>';
+    } else {
+      input.type = 'password';
+      el.innerHTML = '<i class="fas fa-eye"></i>';
+    }
+  }
+
+  // ================================================================
+  // SAVE TO SUPABASE CLOUD
+  // ================================================================
+  async function saveUserToSupabase(userData) {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/users`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(userData)
+    });
+    if (!response.ok) {
+      throw new Error(`Supabase Error: ${response.status}`);
+    }
+    return response;
+  }
+
+  // ================================================================
+  // CREATE ACCOUNT
+  // ================================================================
+  document.getElementById('createBtn').addEventListener('click', async function() {
+    const firstName = document.getElementById('regFirstName').value.trim();
+    const lastName = document.getElementById('regLastName').value.trim();
+    const email = document.getElementById('regEmail').value.trim().toLowerCase();
+    const phone = document.getElementById('regPhone').value.trim();
+    const address = document.getElementById('regAddress').value.trim();
+    const password = document.getElementById('regPassword').value.trim();
+    const confirm = document.getElementById('regConfirmPassword').value.trim();
+    const regError = document.getElementById('regError');
+    const regSuccess = document.getElementById('regSuccess');
+
+    // Validate
+    if (!firstName || !lastName || !email || !phone || !address || !password || !confirm) {
+      regError.textContent = '⚠️ Please fill in all fields.';
+      regError.style.display = 'block';
+      regSuccess.style.display = 'none';
+      return;
+    }
+
+    if (firstName.length < 2) {
+      regError.textContent = '⚠️ First name must be at least 2 characters.';
+      regError.style.display = 'block';
+      regSuccess.style.display = 'none';
+      return;
+    }
+
+    if (!email.includes('@') || !email.includes('.')) {
+      regError.textContent = '⚠️ Please enter a valid email address.';
+      regError.style.display = 'block';
+      regSuccess.style.display = 'none';
+      return;
+    }
+
+    if (phone.length < 10) {
+      regError.textContent = '⚠️ Please enter a valid phone number (min 10 digits).';
+      regError.style.display = 'block';
+      regSuccess.style.display = 'none';
+      return;
+    }
+
+    if (password.length < 8) {
+      regError.textContent = '⚠️ Password must be at least 8 characters.';
+      regError.style.display = 'block';
+      regSuccess.style.display = 'none';
+      return;
+    }
+
+    if (password !== confirm) {
+      regError.textContent = '⚠️ Passwords do not match.';
+      regError.style.display = 'block';
+      regSuccess.style.display = 'none';
+      return;
+    }
+
+    // Check if user already exists in Supabase
+    const checkResponse = await fetch(`${SUPABASE_URL}/rest/v1/users?email=eq.${email}`, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    });
+    const existingUsers = await checkResponse.json();
+    if (existingUsers.length > 0) {
+      regError.textContent = '⚠️ An account with this email already exists.';
+      regError.style.display = 'block';
+      regSuccess.style.display = 'none';
+      return;
+    }
+
+    // Create account in Supabase Cloud
+    try {
+      await saveUserToSupabase({
+        email: email,
+        first_name: firstName,
+        last_name: lastName,
+        phone: phone,
+        address: address,
+        password: password,
+        balance: 10.00,
+        loan_balance: 0,
+        loan_status: 'No active loan'
+      });
+
+      regError.style.display = 'none';
+      regSuccess.textContent = '✅ Account created successfully! Redirecting to login...';
+      regSuccess.style.display = 'block';
+      this.disabled = true;
+
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 2000);
+
+    } catch (error) {
+      regError.textContent = '❌ Error creating account. Please try again.';
+      regError.style.display = 'block';
+      regSuccess.style.display = 'none';
+      console.error(error);
+    }
+  });
+
+  // Enter key support
+  document.getElementById('regConfirmPassword').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('createBtn').click();
+  });
+
+  console.log('🔐 PHC Jackpot Create Account (Supabase Connected) ready.');
+</script>
+</body>
+</html>
