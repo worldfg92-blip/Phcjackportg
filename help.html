@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHC Help</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        .help-answer {
+            display: none;
+            margin-top: 15px;
+            animation: fadeIn 0.3s ease;
+        }
+        .help-answer.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                Help
+            </div>
+        </div>
+
+        <div class="welcome">
+            <h1>How can we help? 👋</h1>
+            <p>Find answers and contact support</p>
+        </div>
+
+        <div class="card">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="transaction" onclick="showAnswer(1)">
+                <div class="tx-left">
+                    <div class="tx-icon"><i class="fas fa-gamepad"></i></div>
+                    <div>
+                        <b>How do I play?</b><br>
+                        <small>Tap Play and select your card</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="transaction" onclick="showAnswer(2)">
+                <div class="tx-left">
+                    <div class="tx-icon"><i class="fas fa-clock"></i></div>
+                    <div>
+                        <b>How long is the round?</b><br>
+                        <small>Check the countdown timer</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="transaction" onclick="showAnswer(3)">
+                <div class="tx-left">
+                    <div class="tx-icon"><i class="fas fa-headset"></i></div>
+                    <div>
+                        <b>Contact Support</b><br>
+                        <small>Chat with support team</small>
+                    </div>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="color:#004b87; font-size:13px; font-weight:600;">Chat</span>
+                    <i class="fas fa-chevron-right" style="color:#b0b8c5;"></i>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card">
+            <h2>Answer</h2>
+
+            <div class="help-answer active" id="answer1">
+                <div class="message">
+                    🎮 <strong>How to Play:</strong><br><br>
+                    Choose a game from the Games tab, select your entry amount, upload a photo of your card, and submit. Your entry will be reviewed by admin.
+                </div>
+            </div>
+
+            <div class="help-answer" id="answer2">
+                <div class="message">
+                    ⏳ <strong>Round Time:</strong><br><br>
+                    The current round countdown is shown on the home page. Each round lasts 5 days. Once the timer hits zero, winners are drawn.
+                </div>
+            </div>
+
+            <div class="help-answer" id="answer3">
+                <div class="message">
+                    💬 <strong>Contact Support:</strong><br><br>
+                    You can reach our support team instantly via the chat bubble on the home screen or by going to <strong>Settings → Help Center → Chat</strong>.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item" onclick="location.href='game.html'">
+                <i class="fas fa-gamepad"></i> Games
+            </div>
+            <div class="nav-item" onclick="location.href='history.html'">
+                <i class="fas fa-history"></i> History
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-circle-info"></i> Help
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ==========================================================
+        // GLOBAL DARK MODE LOADER
+        // ==========================================================
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        // ==========================================================
+        // SHOW ANSWER FUNCTION
+        // ==========================================================
+        function showAnswer(num) {
+            // Hide all answers
+            document.querySelectorAll('.help-answer').forEach(el => el.classList.remove('active'));
+
+            // Show selected answer
+            let target = document.getElementById('answer' + num);
+            if (target) {
+                target.classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+</html>

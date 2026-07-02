@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>World Cup Live - PHC Casino</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ========================================================== */
+        /* WORLD CUP LIVE - PROFESSIONAL STYLE                        */
+        /* ========================================================== */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .app {
+            max-width: 480px;
+            margin: 0 auto;
+            background: #0a0a0a;
+            min-height: 100vh;
+            padding-bottom: 80px;
+            background: radial-gradient(ellipse at center, #1a0a0a 0%, #0a0a0a 100%);
+        }
+
+        .topbar {
+            background: linear-gradient(135deg, #0d0d0d, #1a0a0a);
+            color: #ffd700;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #ffd700;
+        }
+
+        .topbar .logo {
+            font-size: 17px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ffd700;
+        }
+
+        .topbar .logo i {
+            cursor: pointer;
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .topbar .live-count {
+            font-size: 11px;
+            font-weight: 700;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .topbar .live-count .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulseDot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        /* ========================================================== */
+        /* JACKPOT STATUS HEADER                                      */
+        /* ========================================================== */
+        .jackpot-status {
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            padding: 16px 20px;
+            margin: 0 0 12px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .jackpot-status::after {
+            content: '🏆';
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            font-size: 60px;
+            opacity: 0.05;
+        }
+
+        .jackpot-status .status-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .jackpot-status .status-value {
+            font-size: 20px;
+            font-weight: 900;
+            color: #ffd700;
+            margin-top: 2px;
+        }
+
+        .jackpot-status .status-sub {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 2px;
+        }
+
+        /* ========================================================== */
+        /* MATCH LIST                                                  */
+        /* ========================================================== */
+        .match-list {
+            padding: 0 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .match-card {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 12px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: 0.3s;
+        }
+
+        .match-card:hover {
+            border-color: rgba(255, 215, 0, 0.05);
+            background: #1e1e36;
+        }
+
+        .match-card .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .match-card .match-header .match-number {
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .match-card .match-header .match-status {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .match-card .match-header .match-status.live {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .match-card .match-header .match-status.live .pulse {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #ef4444;
+            margin-right: 4px;
+            animation: pulseDot 1s ease-in-out infinite;
+        }
+
+        .match-card .match-header .match-status.ended {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .match-card .match-header .match-status.upcoming {
+            background: rgba(255, 215, 0, 0.08);
+            color: #ffd700;
+        }
+
+        .match-card .match-teams {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2px 0;
+        }
+
+        .match-card .match-teams .team {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #f8fafc;
+        }
+
+        .match-card .match-teams .team .flag {
+            font-size: 20px;
+        }
+
+        .match-card .match-teams .team .team-name {
+            max-width: 80px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .match-card .match-teams .score {
+            font-size: 18px;
+            font-weight: 800;
+            color: #ffd700;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .match-card .match-teams .score.live {
+            color: #10b981;
+        }
+
+        .match-card .match-odds {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .match-card .match-odds .odds-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        .match-card .match-odds .odds-group .odd-item {
+            padding: 3px 10px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            font-size: 12px;
+            font-weight: 700;
+            color: #f8fafc;
+            text-align: center;
+            min-width: 36px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .match-card .match-odds .odds-group .odd-item .label {
+            font-size: 7px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.3);
+            display: block;
+        }
+
+        .match-card .match-odds .match-status {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        .match-card .match-odds .match-status.running {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .match-card .match-odds .match-status.running .pulse {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ef4444;
+            margin-right: 4px;
+            animation: pulseDot 1s ease-in-out infinite;
+        }
+
+        .match-card .match-odds .match-status.ended {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .match-card .match-odds .match-status.upcoming {
+            background: rgba(255, 215, 0, 0.08);
+            color: #ffd700;
+        }
+
+        .match-card .match-progress {
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .match-card .match-progress .progress-bar {
+            flex: 1;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .match-card .match-progress .progress-bar .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(to right, #10b981, #ffd700);
+            transition: width 1s ease;
+        }
+
+        .match-card .match-progress .progress-label {
+            font-size: 9px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.3);
+            min-width: 35px;
+        }
+
+        /* ========================================================== */
+        /* EMPTY STATE - NO JACKPOT SELECTED                          */
+        /* ========================================================== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .empty-state .empty-icon {
+            font-size: 70px;
+            display: block;
+            margin-bottom: 16px;
+            color: rgba(255, 215, 0, 0.1);
+        }
+
+        .empty-state h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.3);
+            line-height: 1.6;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .empty-state .play-jackpot-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 14px 36px;
+            background: linear-gradient(135deg, #ffd700, #f59e0b);
+            color: #0a0a0a;
+            border: none;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.15);
+        }
+
+        .empty-state .play-jackpot-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 30px rgba(255, 215, 0, 0.25);
+        }
+
+        /* ========================================================== */
+        /* BOTTOM NAV                                                  */
+        /* ========================================================== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: rgba(10, 10, 10, 0.98);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 14px 0;
+            border-top: 1px solid rgba(255, 215, 0, 0.1);
+            z-index: 200;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 12px;
+            transition: 0.2s;
+            border: none;
+            background: transparent;
+        }
+
+        .nav-item i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: #ffd700;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 10, 0.95);
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+            max-width: 90%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .toast.show { opacity: 1; }
+
+        @media (max-width: 480px) {
+            .match-card .match-teams .team .team-name {
+                max-width: 60px;
+                font-size: 12px;
+            }
+            .match-card .match-teams .score {
+                font-size: 16px;
+                min-width: 32px;
+            }
+            .match-card .match-teams .team .flag {
+                font-size: 16px;
+            }
+            .jackpot-status .status-value {
+                font-size: 17px;
+            }
+            .empty-state .empty-icon {
+                font-size: 50px;
+            }
+            .empty-state h3 {
+                font-size: 18px;
+            }
+            .empty-state .play-jackpot-btn {
+                font-size: 14px;
+                padding: 12px 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                🌍 World Cup Live
+            </div>
+            <div class="live-count">
+                <span class="dot"></span>
+                <span id="liveCount">0 Live</span>
+            </div>
+        </div>
+
+        <!-- JACKPOT STATUS -->
+        <div class="jackpot-status">
+            <div class="status-title">🎯 Your Jackpot</div>
+            <div class="status-value" id="jackpotStatus">Waiting for matches...</div>
+            <div class="status-sub" id="jackpotSub">Select 12 games to play</div>
+        </div>
+
+        <!-- MATCH LIST -->
+        <div class="match-list" id="matchList">
+            <!-- Matches rendered by JavaScript -->
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item active" onclick="location.href='world-cup-live.html'">
+                <i class="fas fa-futbol"></i> World Cup
+            </div>
+            <div class="nav-item" onclick="location.href='bet.html'">
+                <i class="fas fa-gamepad"></i> Predictor
+            </div>
+            <div class="nav-item" onclick="location.href='settings.html'">
+                <i class="fas fa-cog"></i> Settings
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast" class="toast">Message</div>
+
+    <script>
+        // ==========================================================
+        // JACKPOT MATCH DATA - REAL TEAMS AND TIMES
+        // ==========================================================
+        
+        // Default Jackpot matches (12 games with real teams)
+        var defaultJackpotMatches = [
+            { id: 1, number: 1, home: "Jordan", away: "Argentina", flagHome: "🇯🇴", flagAway: "🇦🇷", date: "2026-07-04", time: "14:00", odds: { home: 3.50, draw: 3.20, away: 2.10 } },
+            { id: 2, number: 2, home: "Brazil", away: "Portugal", flagHome: "🇧🇷", flagAway: "🇵🇹", date: "2026-07-04", time: "16:00", odds: { home: 1.80, draw: 3.40, away: 4.50 } },
+            { id: 3, number: 3, home: "England", away: "France", flagHome: "🏴", flagAway: "🇫🇷", date: "2026-07-04", time: "18:00", odds: { home: 2.60, draw: 3.10, away: 2.80 } },
+            { id: 4, number: 4, home: "Spain", away: "Germany", flagHome: "🇪🇸", flagAway: "🇩🇪", date: "2026-07-04", time: "20:00", odds: { home: 2.40, draw: 3.20, away: 3.00 } },
+            { id: 5, number: 5, home: "Italy", away: "Netherlands", flagHome: "🇮🇹", flagAway: "🇳🇱", date: "2026-07-05", time: "14:00", odds: { home: 2.20, draw: 3.30, away: 3.50 } },
+            { id: 6, number: 6, home: "Mexico", away: "USA", flagHome: "🇲🇽", flagAway: "🇺🇸", date: "2026-07-05", time: "16:00", odds: { home: 2.80, draw: 3.20, away: 2.60 } },
+            { id: 7, number: 7, home: "Japan", away: "South Korea", flagHome: "🇯🇵", flagAway: "🇰🇷", date: "2026-07-05", time: "18:00", odds: { home: 2.50, draw: 3.10, away: 3.00 } },
+            { id: 8, number: 8, home: "Croatia", away: "Ghana", flagHome: "🇭🇷", flagAway: "🇬🇭", date: "2026-07-05", time: "20:00", odds: { home: 1.90, draw: 3.30, away: 4.20 } },
+            { id: 9, number: 9, home: "Colombia", away: "Portugal", flagHome: "🇨🇴", flagAway: "🇵🇹", date: "2026-07-06", time: "14:00", odds: { home: 2.30, draw: 3.20, away: 3.10 } },
+            { id: 10, number: 10, home: "DR Congo", away: "Uzbekistan", flagHome: "🇨🇩", flagAway: "🇺🇿", date: "2026-07-06", time: "16:00", odds: { home: 2.50, draw: 3.10, away: 3.00 } },
+            { id: 11, number: 11, home: "Algeria", away: "Austria", flagHome: "🇩🇿", flagAway: "🇦🇹", date: "2026-07-06", time: "18:00", odds: { home: 2.10, draw: 3.20, away: 3.50 } },
+            { id: 12, number: 12, home: "Mexico", away: "USA", flagHome: "🇲🇽", flagAway: "🇺🇸", date: "2026-07-06", time: "20:00", odds: { home: 2.40, draw: 3.20, away: 2.90 } }
+        ];
+
+        // ==========================================================
+        // STATE
+        // ==========================================================
+        var jackpotMatches = [];
+        var liveCount = 0;
+        var goalInterval = null;
+        var isGameSelected = false;
+
+        // ==========================================================
+        // LOAD JACKPOT SELECTIONS FROM STORAGE
+        // ==========================================================
+        function loadJackpotSelections() {
+            // Try to load selected matches from localStorage
+            var saved = localStorage.getItem('phc_jackpot_selections');
+            var selectedMatches = [];
+
+            if (saved) {
+                try {
+                    selectedMatches = JSON.parse(saved);
+                    if (selectedMatches && selectedMatches.length > 0) {
+                        isGameSelected = true;
+                        jackpotMatches = selectedMatches;
+                        updateJackpotStatus();
+                        renderMatches();
+                        return;
+                    }
+                } catch (e) {}
+            }
+
+            // If no selections saved, use default matches (but show as "not selected")
+            // This shows the user what's available
+            jackpotMatches = defaultJackpotMatches.map(function(m) {
+                return {
+                    id: m.id,
+                    number: m.number,
+                    home: m.home,
+                    away: m.away,
+                    flagHome: m.flagHome,
+                    flagAway: m.flagAway,
+                    date: m.date,
+                    time: m.time,
+                    odds: m.odds,
+                    homeScore: 0,
+                    awayScore: 0,
+                    status: 'upcoming',
+                    minute: 0,
+                    picked: false,
+                    matchTime: new Date(m.date + 'T' + m.time + ':00')
+                };
+            });
+
+            isGameSelected = false;
+            updateJackpotStatus();
+            renderMatches();
+        }
+
+        // ==========================================================
+        // UPDATE JACKPOT STATUS
+        // ==========================================================
+        function updateJackpotStatus() {
+            var statusEl = document.getElementById('jackpotStatus');
+            var subEl = document.getElementById('jackpotSub');
+
+            if (isGameSelected) {
+                var liveMatches = jackpotMatches.filter(function(m) { return m.status === 'running'; });
+                var upcomingMatches = jackpotMatches.filter(function(m) { return m.status === 'upcoming'; });
+                var endedMatches = jackpotMatches.filter(function(m) { return m.status === 'ended'; });
+
+                if (liveMatches.length > 0) {
+                    statusEl.textContent = '🔴 ' + liveMatches.length + ' Matches LIVE!';
+                    statusEl.style.color = '#10b981';
+                    subEl.textContent = 'Watch your selected matches in real-time';
+                } else if (upcomingMatches.length > 0) {
+                    statusEl.textContent = '⏳ ' + upcomingMatches.length + ' Matches Upcoming';
+                    statusEl.style.color = '#ffd700';
+                    subEl.textContent = 'Your matches will start at scheduled times';
+                } else if (endedMatches.length > 0) {
+                    statusEl.textContent = '✅ ' + endedMatches.length + ' Matches Completed';
+                    statusEl.style.color = 'rgba(255,255,255,0.5)';
+                    subEl.textContent = 'All matches have finished';
+                } else {
+                    statusEl.textContent = '🎯 ' + jackpotMatches.length + ' Games Selected';
+                    statusEl.style.color = '#ffd700';
+                    subEl.textContent = 'Select 12 games to play the Jackpot';
+                }
+            } else {
+                statusEl.textContent = '⚠️ No Games Selected';
+                statusEl.style.color = '#ef4444';
+                subEl.textContent = 'Please select 12 games to play the Jackpot';
+            }
+        }
+
+        // ==========================================================
+        // GET MATCH STATUS BASED ON DATE/TIME
+        // ==========================================================
+        function getMatchStatus(matchTime) {
+            var now = new Date();
+            var matchStart = new Date(matchTime);
+            var matchEnd = new Date(matchStart);
+            matchEnd.setHours(matchEnd.getHours() + 2);
+
+            if (now < matchStart) {
+                return { status: 'upcoming', minute: 0 };
+            } else if (now >= matchStart && now <= matchEnd) {
+                var elapsed = Math.floor((now - matchStart) / 60000);
+                var minute = Math.min(90, elapsed);
+                return { status: 'running', minute: minute };
+            } else {
+                return { status: 'ended', minute: 90 };
+            }
+        }
+
+        // ==========================================================
+        // RENDER MATCHES
+        // ==========================================================
+        function renderMatches() {
+            var container = document.getElementById('matchList');
+
+            if (!isGameSelected || jackpotMatches.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <span class="empty-icon">⚽</span>
+                        <h3>No Games Selected</h3>
+                        <p>You haven't picked any games for the Jackpot yet.</p>
+                        <p style="margin-top: 6px; font-size: 13px; color: rgba(255,255,255,0.2);">
+                            Select 12 matches to play and win big!
+                        </p>
+                        <button class="play-jackpot-btn" onclick="location.href='bet.html'">
+                            🏆 Pick 12 Games
+                        </button>
+                    </div>
+                `;
+                document.getElementById('liveCount').textContent = '0';
+                return;
+            }
+
+            var html = '';
+            liveCount = 0;
+            var now = new Date();
+
+            // Update each match status
+            jackpotMatches.forEach(function(match) {
+                var statusInfo = getMatchStatus(match.matchTime);
+                match.status = statusInfo.status;
+                match.minute = statusInfo.minute;
+
+                // If match is running and has no score, add random score
+                if (match.status === 'running' && match.homeScore === 0 && match.awayScore === 0) {
+                    match.homeScore = Math.floor(Math.random() * 3);
+                    match.awayScore = Math.floor(Math.random() * 2);
+                }
+
+                if (match.status === 'running') liveCount++;
+
+                var isLive = match.status === 'running';
+                var scoreClass = isLive ? 'live' : '';
+                var statusClass = isLive ? 'running' : (match.status === 'ended' ? 'ended' : 'upcoming');
+                var statusLabel = isLive ? match.minute + "'" : (match.status === 'ended' ? 'FT' : 'Upcoming');
+                var progress = Math.min(100, (match.minute / 90) * 100);
+                var timeDisplay = match.date + ' ' + match.time;
+
+                html += `
+                    <div class="match-card">
+                        <div class="match-header">
+                            <span class="match-number">Game ${match.number}</span>
+                            <span class="match-status ${statusClass}">
+                                ${isLive ? '<span class="pulse"></span>' : ''}
+                                ${statusLabel}
+                            </span>
+                        </div>
+                        <div class="match-teams">
+                            <div class="team">
+                                <span class="flag">${match.flagHome}</span>
+                                <span class="team-name">${match.home}</span>
+                            </div>
+                            <div class="score ${scoreClass}">${match.homeScore} - ${match.awayScore}</div>
+                            <div class="team">
+                                <span class="team-name">${match.away}</span>
+                                <span class="flag">${match.flagAway}</span>
+                            </div>
+                        </div>
+                        <div class="match-odds">
+                            <div class="odds-group">
+                                <div class="odd-item">
+                                    <span class="label">1</span>
+                                    ${match.odds.home.toFixed(2)}
+                                </div>
+                                <div class="odd-item">
+                                    <span class="label">X</span>
+                                    ${match.odds.draw.toFixed(2)}
+                                </div>
+                                <div class="odd-item">
+                                    <span class="label">2</span>
+                                    ${match.odds.away.toFixed(2)}
+                                </div>
+                            </div>
+                            <span class="match-status ${statusClass}">
+                                ${isLive ? '<span class="pulse"></span>' : ''}
+                                ${statusLabel}
+                            </span>
+                        </div>
+                        <div style="font-size:10px; color:rgba(255,255,255,0.2); text-align:right; margin-top:4px;">
+                            ${timeDisplay}
+                        </div>
+                        ${isLive ? `
+                        <div class="match-progress">
+                            <span class="progress-label">${match.minute}'</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress}%;"></div>
+                            </div>
+                            <span class="progress-label">Live</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            document.getElementById('liveCount').textContent = liveCount + ' Live';
+            updateJackpotStatus();
+            updateLiveScores();
+        }
+
+        // ==========================================================
+        // UPDATE LIVE SCORES
+        // ==========================================================
+        function updateLiveScores() {
+            if (goalInterval) clearInterval(goalInterval);
+
+            goalInterval = setInterval(function() {
+                var liveMatches = jackpotMatches.filter(function(m) { return m.status === 'running'; });
+
+                liveMatches.forEach(function(match) {
+                    if (match.minute < 90) {
+                        match.minute += 1;
+                    }
+
+                    if (Math.random() < 0.06 && match.minute < 90) {
+                        var isHomeGoal = Math.random() < 0.5;
+                        if (isHomeGoal) {
+                            match.homeScore += 1;
+                            showToast('⚽ GOAL! ' + match.home + ' scores! (' + match.homeScore + '-' +
+                                match.awayScore + ')');
+                        } else {
+                            match.awayScore += 1;
+                            showToast('⚽ GOAL! ' + match.away + ' scores! (' + match.homeScore + '-' +
+                                match.awayScore + ')');
+                        }
+                        renderMatches();
+                        return;
+                    }
+
+                    if (match.minute >= 90) {
+                        match.status = 'ended';
+                        match.time = 'FT';
+                        showToast('⏱️ Full Time! ' + match.home + ' ' + match.homeScore + '-' + match
+                            .awayScore + ' ' + match.away);
+                    }
+                });
+
+                renderMatches();
+            }, 3000);
+        }
+
+        // ==========================================================
+        // TOAST
+        // ==========================================================
+        function showToast(msg, duration) {
+            duration = duration || 3000;
+            var toast = document.getElementById('toast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(function() {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        // ==========================================================
+        // LISTEN FOR STORAGE CHANGES
+        // ==========================================================
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'phc_jackpot_selections') {
+                loadJackpotSelections();
+            }
+        });
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadJackpotSelections();
+
+            // Check every 10 seconds if matches should start
+            setInterval(function() {
+                var now = new Date();
+                var updated = false;
+
+                jackpotMatches.forEach(function(match) {
+                    var matchTime = new Date(match.matchTime);
+                    var statusInfo = getMatchStatus(match.matchTime);
+                    if (match.status !== statusInfo.status) {
+                        match.status = statusInfo.status;
+                        match.minute = statusInfo.minute;
+                        updated = true;
+                        if (statusInfo.status === 'running') {
+                            showToast('🔴 ' + match.home + ' vs ' + match.away + ' has started!');
+                        }
+                    }
+                });
+
+                if (updated) {
+                    renderMatches();
+                }
+            }, 10000);
+
+            console.log('🌍 World Cup Live loaded!');
+            console.log('🎯 Showing your selected Jackpot matches only!');
+            console.log('📅 Matches auto-start at their scheduled times!');
+        });
+
+        // Make functions global
+        window.loadJackpotSelections = loadJackpotSelections;
+        window.renderMatches = renderMatches;
+    </script>
+
+</body>
+</html>

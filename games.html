@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>PHC Games</title>
+
+
+<link rel="stylesheet" href="style.css">
+
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+
+<div class="topbar">
+
+
+<div class="logo">
+
+
+<i class="fas fa-arrow-left"
+onclick="history.back()"></i>
+
+
+PHC Games
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="welcome">
+
+
+<h1>
+Choose Game
+</h1>
+
+
+<p>
+Select your card type
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- APPLE -->
+
+
+<div class="card game-option"
+onclick="selectGame('Apple Card')">
+
+
+
+<div class="game-icon">
+
+<i class="fab fa-apple"></i>
+
+</div>
+
+
+
+
+<h2>
+Apple Card
+</h2>
+
+
+<p>
+Premium jackpot entry
+</p>
+
+
+
+<button>
+
+Choose
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- RAZER -->
+
+
+<div class="card game-option"
+onclick="selectGame('Razer Gold')">
+
+
+
+<div class="game-icon">
+
+<i class="fas fa-gamepad"></i>
+
+</div>
+
+
+
+
+<h2>
+Razer Gold
+
+</h2>
+
+
+<p>
+Gaming card jackpot
+
+</p>
+
+
+
+<button>
+
+Choose
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- STEAM -->
+
+
+<div class="card game-option"
+onclick="selectGame('Steam Card')">
+
+
+
+<div class="game-icon">
+
+<i class="fab fa-steam"></i>
+
+</div>
+
+
+
+
+<h2>
+Steam Card
+
+</h2>
+
+
+<p>
+Steam reward entry
+
+</p>
+
+
+
+<button>
+
+Choose
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="bottom-nav">
+
+
+
+<div class="nav-item"
+onclick="location.href='index.html'">
+
+<i class="fas fa-home"></i>
+
+Home
+
+</div>
+
+
+
+
+<div class="nav-item active">
+
+<i class="fas fa-gamepad"></i>
+
+Games
+
+</div>
+
+
+
+
+
+<div class="nav-item"
+onclick="location.href='history.html'">
+
+<i class="fas fa-history"></i>
+
+History
+
+</div>
+
+
+
+
+
+<div class="nav-item"
+onclick="location.href='settings.html'">
+
+<i class="fas fa-cog"></i>
+
+Settings
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<script>
+
+
+function selectGame(name){
+
+
+localStorage.setItem(
+"selectedGame",
+name
+);
+
+
+
+localStorage.removeItem(
+"selectedAmount"
+);
+
+
+
+location.href =
+"entry.html";
+
+
+}
+
+
+
+</script>
+
+
+
+
+
+</body>
+
+</html>

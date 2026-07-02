@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PHC Jackpot Predictor</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ========================================================== */
+        /* SPORTYBET STYLE JACKPOT PAGE                               */
+        /* ========================================================== */
+        
+        body.dark {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+        body.dark .app {
+            background: #0f172a;
+        }
+        body.dark .topbar {
+            background: #1e293b;
+            border-bottom: 1px solid #334155;
+        }
+        body.dark .card {
+            background: #1e293b;
+            box-shadow: none;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+        }
+        body.dark .welcome h1 {
+            color: #f8fafc;
+        }
+        body.dark .welcome p {
+            color: #94a3b8;
+        }
+
+        .bet-page {
+            padding: 0 20px 50px 20px;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        /* Top Banner */
+        .jackpot-banner {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            padding: 30px 20px 20px;
+            text-align: center;
+            border-bottom: 2px solid #004b87;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0 0 24px 24px;
+            margin: 0 -20px 15px -20px;
+        }
+        body:not(.dark) .jackpot-banner {
+            background: linear-gradient(135deg, #004b87, #002a55);
+        }
+        .jackpot-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            animation: pulseGlow 4s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+        .jackpot-banner h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #f8fafc;
+            position: relative;
+            z-index: 1;
+        }
+        .jackpot-banner .prize {
+            font-size: 28px;
+            font-weight: 900;
+            color: #f5b342;
+            margin: 5px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .jackpot-banner .sub {
+            font-size: 14px;
+            color: #94a3b8;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Countdown */
+        .countdown-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .countdown-box {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 10px 5px;
+            min-width: 55px;
+            text-align: center;
+        }
+        body:not(.dark) .countdown-box {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .countdown-box .num {
+            font-size: 24px;
+            font-weight: 800;
+            color: #f8fafc;
+            display: block;
+        }
+        .countdown-box .label {
+            font-size: 10px;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        /* Tabs */
+        .bet-tabs {
+            display: flex;
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 4px;
+            margin-bottom: 15px;
+        }
+        body:not(.dark) .bet-tabs {
+            background: #f0f4f8;
+        }
+        .bet-tabs .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: 0.2s;
+        }
+        .bet-tabs .tab.active {
+            background: #004b87;
+            color: #f8fafc;
+        }
+        .bet-tabs .tab:hover:not(.active) {
+            color: #f8fafc;
+        }
+
+        /* Round Info */
+        .round-info {
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        /* Match List - Professional Table */
+        .match-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .match-item {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 12px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: 0.3s;
+        }
+        body:not(.dark) .match-item {
+            background: #ffffff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            border: 1px solid #e8ecf1;
+        }
+
+        .match-item .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .match-item .match-header .match-number {
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .match-item .match-header .match-status {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .match-item .match-header .match-status.live {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .match-item .match-header .match-status.live .pulse {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #ef4444;
+            margin-right: 4px;
+            animation: pulseDot 1s ease-in-out infinite;
+        }
+
+        .match-item .match-header .match-status.ended {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .match-item .match-header .match-status.upcoming {
+            background: rgba(255, 215, 0, 0.08);
+            color: #ffd700;
+        }
+
+        .match-item .match-teams {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2px 0;
+        }
+
+        .match-item .match-teams .team {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #f8fafc;
+        }
+        body:not(.dark) .match-item .match-teams .team {
+            color: #212529;
+        }
+
+        .match-item .match-teams .team .flag {
+            font-size: 18px;
+        }
+
+        .match-item .match-teams .team .team-name {
+            max-width: 80px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .match-item .match-teams .score {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffd700;
+            min-width: 36px;
+            text-align: center;
+        }
+
+        .match-item .match-teams .score.live {
+            color: #10b981;
+        }
+
+        .match-item .match-teams .score.ended {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .match-item .match-odds {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        body:not(.dark) .match-item .match-odds {
+            border-top-color: #f0f2f5;
+        }
+
+        .match-item .match-odds .odd-btn {
+            padding: 4px 14px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.03);
+            font-size: 14px;
+            font-weight: 700;
+            color: #f8fafc;
+            text-align: center;
+            min-width: 44px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: 0.2s;
+            position: relative;
+        }
+        body:not(.dark) .match-item .match-odds .odd-btn {
+            background: #f8fafc;
+            color: #212529;
+            border-color: #e8ecf1;
+        }
+
+        .match-item .match-odds .odd-btn .label {
+            font-size: 7px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.3);
+            display: block;
+            text-transform: uppercase;
+        }
+        body:not(.dark) .match-item .match-odds .odd-btn .label {
+            color: #6c757d;
+        }
+
+        .match-item .match-odds .odd-btn:hover:not(.locked):not(.selected) {
+            transform: translateY(-2px);
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        /* SELECTED - BLUE/GOLD HIGHLIGHT */
+        .match-item .match-odds .odd-btn.selected {
+            border-color: #f5b342;
+            background: #1a237e;
+            color: #ffffff;
+            box-shadow: 0 0 20px rgba(26, 35, 126, 0.2);
+        }
+        body:not(.dark) .match-item .match-odds .odd-btn.selected {
+            background: #1a237e;
+            color: #ffffff;
+            border-color: #f5b342;
+        }
+
+        .match-item .match-odds .odd-btn.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .match-item .match-odds .odd-btn.locked:hover {
+            transform: none;
+            border-color: transparent;
+        }
+
+        .match-item .match-time {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.2);
+            text-align: right;
+            margin-top: 4px;
+        }
+        body:not(.dark) .match-item .match-time {
+            color: #aabbcc;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        /* Bottom Section */
+        .bottom-action-section {
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: #1e293b;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        body:not(.dark) .bottom-action-section {
+            background: #ffffff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            border: 1px solid #e8ecf1;
+        }
+
+        .bottom-action-section .info small {
+            font-size: 11px;
+            color: #94a3b8;
+            display: block;
+        }
+        body:not(.dark) .bottom-action-section .info small {
+            color: #6c757d;
+        }
+
+        .bottom-action-section .info strong {
+            font-size: 22px;
+            font-weight: 800;
+            color: #f8fafc;
+            display: block;
+            margin: 4px 0 12px 0;
+        }
+        body:not(.dark) .bottom-action-section .info strong {
+            color: #212529;
+        }
+
+        .bottom-action-section .btn-play {
+            background: #10b981;
+            color: #ffffff;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 15px;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .bottom-action-section .btn-play:hover:not(:disabled) {
+            background: #059669;
+            transform: scale(1.01);
+        }
+
+        .bottom-action-section .btn-play:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .bottom-action-section .btn-play.locked {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0a1a2a;
+            color: #f8fafc;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show { opacity: 1; }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            background: #1a1a2e;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0 14px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            z-index: 200;
+        }
+        body:not(.dark) .bottom-nav {
+            background: #ffffff;
+            border-top: 1px solid #e8ecf1;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 12px;
+            transition: 0.2s;
+            border: none;
+            background: transparent;
+        }
+        body:not(.dark) .nav-item {
+            color: #6c757d;
+        }
+
+        .nav-item i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: #ffd700;
+        }
+        body:not(.dark) .nav-item.active {
+            color: #1a237e;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        body:not(.dark) .nav-item:hover:not(.active) {
+            color: #1a237e;
+        }
+
+        @media (max-width: 480px) {
+            .match-item .match-teams .team .team-name {
+                max-width: 60px;
+                font-size: 12px;
+            }
+            .match-item .match-teams .score {
+                font-size: 14px;
+                min-width: 30px;
+            }
+            .match-item .match-teams .team .flag {
+                font-size: 14px;
+            }
+            .match-item .match-odds .odd-btn {
+                padding: 3px 10px;
+                font-size: 12px;
+                min-width: 36px;
+            }
+            .jackpot-banner .prize {
+                font-size: 22px;
+            }
+            .countdown-box .num {
+                font-size: 20px;
+            }
+            .bottom-action-section .info strong {
+                font-size: 20px;
+            }
+            .bet-tabs .tab {
+                font-size: 11px;
+                padding: 10px 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app bet-page">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                Predictor
+            </div>
+        </div>
+
+        <!-- JACKPOT BANNER -->
+        <div class="jackpot-banner">
+            <h1>Predict 12 GAMES to Win 🏆</h1>
+            <div class="prize" id="prizeDisplay">The Amount of your choosing card you pick</div>
+            <div class="sub">Prizes for 11 and 10 correct predictions too!</div>
+            
+            <div class="countdown-row">
+                <div class="countdown-box">
+                    <span class="num" id="days">00</span>
+                    <span class="label">Days</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="num" id="hours">00</span>
+                    <span class="label">Hours</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="num" id="minutes">00</span>
+                    <span class="label">Min</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="num" id="seconds">00</span>
+                    <span class="label">Sec</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="bet-tabs">
+            <div class="tab active">Sporty 12</div>
+            <div class="tab" onclick="location.href='previous-results.html'">Previous Results</div>
+            <div class="tab" onclick="location.href='how-to-play.html'">How to play</div>
+        </div>
+
+        <!-- ROUND INFO -->
+        <div class="round-info">
+            Round No. <span id="roundNumber">20260705</span>
+        </div>
+
+        <!-- MATCH LIST -->
+        <div class="match-list" id="matchContainer">
+            <!-- Matches generated by JavaScript -->
+        </div>
+
+        <!-- BOTTOM ACTION -->
+        <div class="bottom-action-section">
+            <div class="info">
+                <small>Combination</small>
+                <strong id="combinationCount">0 / 12</strong>
+            </div>
+            <button class="btn-play" id="playToWinBtn" onclick="playToWin()">
+                Play to Win
+            </button>
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <div class="nav-item" onclick="location.href='index.html'">
+                <i class="fas fa-home"></i> Home
+            </div>
+            <div class="nav-item active" onclick="location.href='bet.html'">
+                <i class="fas fa-gamepad"></i> Predictor
+            </div>
+            <div class="nav-item" onclick="location.href='history.html'">
+                <i class="fas fa-history"></i> History
+            </div>
+            <div class="nav-item" onclick="location.href='settings.html'">
+                <i class="fas fa-cog"></i> Settings
+            </div>
+        </div>
+
+    </div>
+
+    <div id="toast" class="toast">Message</div>
+
+    <script>
+        // ==========================================================
+        // API KEY - YOUR API-FOOTBALL KEY
+        // ==========================================================
+        var API_KEY = "25f602f19b65333275e3d93789a18559";
+        var API_HOST = "v3.football.api-sports.io";
+
+        // ==========================================================
+        // STATE
+        // ==========================================================
+        var allMatches = [];
+        var selectedCombinations = {};
+        var currentRound = '';
+        var countdownInterval = null;
+        var isBettingLocked = false;
+        var roundEndTime = null;
+
+        // ==========================================================
+        // FETCH REAL MATCHES FOR THE WEEKEND
+        // ==========================================================
+        function fetchWeekendMatches() {
+            var container = document.getElementById('matchContainer');
+            container.innerHTML = `
+                <div style="text-align:center; padding:30px; color:rgba(255,255,255,0.3);">
+                    <i class="fas fa-spinner fa-spin" style="font-size:30px; display:block; margin-bottom:10px;"></i>
+                    Loading weekend matches...
+                </div>
+            `;
+
+            var today = new Date();
+            var currentDay = today.getDay();
+            
+            var daysUntilFriday = (5 - currentDay + 7) % 7;
+            if (daysUntilFriday === 0) daysUntilFriday = 7;
+            
+            var friday = new Date(today);
+            friday.setDate(today.getDate() + daysUntilFriday);
+
+            var dateStr = friday.getFullYear() + '-' + 
+                         String(friday.getMonth() + 1).padStart(2, '0') + '-' + 
+                         String(friday.getDate()).padStart(2, '0');
+
+            var leagues = [39, 140, 135, 78, 61, 1, 2, 3, 4, 5];
+            var allData = [];
+            var completed = 0;
+
+            leagues.forEach(function(leagueId) {
+                var url = 'https://' + API_HOST + '/fixtures?date=' + dateStr + '&league=' + leagueId;
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'x-rapidapi-key': API_KEY,
+                        'x-rapidapi-host': API_HOST
+                    }
+                })
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    if (data.response && data.response.length > 0) {
+                        allData = allData.concat(data.response);
+                    }
+                    completed++;
+                    if (completed === leagues.length) {
+                        if (allData.length > 0) {
+                            processMatches(allData);
+                        } else {
+                            useFallbackMatches();
+                        }
+                    }
+                })
+                .catch(function() {
+                    completed++;
+                    if (completed === leagues.length && allData.length === 0) {
+                        useFallbackMatches();
+                    }
+                });
+            });
+
+            setTimeout(function() {
+                if (allMatches.length === 0) {
+                    useFallbackMatches();
+                }
+            }, 8000);
+        }
+
+        // ==========================================================
+        // PROCESS MATCHES
+        // ==========================================================
+        function processMatches(apiMatches) {
+            allMatches = [];
+            var matchIndex = 0;
+
+            var shuffled = apiMatches.sort(function() { return 0.5 - Math.random(); });
+            var selected = shuffled.slice(0, Math.min(12, shuffled.length));
+
+            if (selected.length < 12) {
+                useFallbackMatches();
+                return;
+            }
+
+            selected.forEach(function(match) {
+                var homeTeam = match.teams.home.name;
+                var awayTeam = match.teams.away.name;
+                var matchDate = new Date(match.fixture.date);
+                
+                var flags = {
+                    'England': '🏴', 'Spain': '🇪🇸', 'Italy': '🇮🇹', 
+                    'Germany': '🇩🇪', 'France': '🇫🇷', 'Brazil': '🇧🇷',
+                    'Portugal': '🇵🇹', 'Argentina': '🇦🇷', 'Netherlands': '🇳🇱'
+                };
+                var homeFlag = flags[match.teams.home.country] || '🏳️';
+                var awayFlag = flags[match.teams.away.country] || '🏳️';
+
+                allMatches.push({
+                    id: match.fixture.id,
+                    number: matchIndex + 1,
+                    home: homeTeam,
+                    away: awayTeam,
+                    flagHome: homeFlag,
+                    flagAway: awayFlag,
+                    date: match.fixture.date,
+                    homeScore: 0,
+                    awayScore: 0,
+                    status: 'upcoming',
+                    minute: 0,
+                    odds: { home: 1.90, draw: 3.30, away: 4.20 },
+                    matchTime: matchDate,
+                    locked: false
+                });
+                matchIndex++;
+            });
+
+            if (allMatches.length >= 12) {
+                renderMatches();
+                setupCountdown();
+            } else {
+                useFallbackMatches();
+            }
+        }
+
+        // ==========================================================
+        // FALLBACK MATCHES - REAL TEAMS
+        // ==========================================================
+        function useFallbackMatches() {
+            var today = new Date();
+            var friday = new Date(today);
+            var daysUntilFriday = (5 - today.getDay() + 7) % 7;
+            if (daysUntilFriday === 0) daysUntilFriday = 7;
+            friday.setDate(today.getDate() + daysUntilFriday);
+
+            var realTeams = [
+                { home: "Manchester City", away: "Liverpool", flagHome: "🏴", flagAway: "🏴" },
+                { home: "Arsenal", away: "Chelsea", flagHome: "🏴", flagAway: "🏴" },
+                { home: "Manchester Utd", away: "Tottenham", flagHome: "🏴", flagAway: "🏴" },
+                { home: "Real Madrid", away: "Barcelona", flagHome: "🇪🇸", flagAway: "🇪🇸" },
+                { home: "Atletico Madrid", away: "Sevilla", flagHome: "🇪🇸", flagAway: "🇪🇸" },
+                { home: "Inter Milan", away: "AC Milan", flagHome: "🇮🇹", flagAway: "🇮🇹" },
+                { home: "Juventus", away: "Napoli", flagHome: "🇮🇹", flagAway: "🇮🇹" },
+                { home: "Bayern Munich", away: "Borussia Dortmund", flagHome: "🇩🇪", flagAway: "🇩🇪" },
+                { home: "PSG", away: "Marseille", flagHome: "🇫🇷", flagAway: "🇫🇷" },
+                { home: "Newcastle", away: "Aston Villa", flagHome: "🏴", flagAway: "🏴" },
+                { home: "Brighton", away: "West Ham", flagHome: "🏴", flagAway: "🏴" },
+                { home: "Crystal Palace", away: "Everton", flagHome: "🏴", flagAway: "🏴" }
+            ];
+
+            var shuffled = realTeams.sort(function() { return 0.5 - Math.random(); });
+            
+            allMatches = [];
+            shuffled.forEach(function(team, index) {
+                var matchDate = new Date(friday);
+                matchDate.setHours(14 + index * 2, 0, 0, 0);
+                
+                allMatches.push({
+                    id: index + 1,
+                    number: index + 1,
+                    home: team.home,
+                    away: team.away,
+                    flagHome: team.flagHome,
+                    flagAway: team.flagAway,
+                    date: matchDate.toISOString(),
+                    homeScore: 0,
+                    awayScore: 0,
+                    status: 'upcoming',
+                    minute: 0,
+                    odds: { home: (1.5 + Math.random() * 1.5), draw: (2.8 + Math.random() * 0.8), away: (2.5 + Math.random() * 2.5) },
+                    matchTime: matchDate,
+                    locked: false
+                });
+            });
+
+            renderMatches();
+            setupCountdown();
+            showToast('📅 Weekend matches loaded!');
+        }
+
+        // ==========================================================
+        // RENDER MATCHES WITH PROPER HIGHLIGHTING
+        // ==========================================================
+        function renderMatches() {
+            var container = document.getElementById('matchContainer');
+            var html = '';
+            var now = new Date();
+
+            allMatches.forEach(function(match) {
+                var matchTime = new Date(match.matchTime);
+                var matchEnd = new Date(matchTime);
+                matchEnd.setHours(matchEnd.getHours() + 2);
+
+                // Update match status
+                if (now >= matchTime && now <= matchEnd) {
+                    match.status = 'running';
+                    match.locked = true;
+                } else if (now > matchEnd) {
+                    match.status = 'ended';
+                    match.locked = true;
+                } else {
+                    match.status = 'upcoming';
+                    if (now >= new Date(matchTime.getTime() - 30 * 60000)) {
+                        match.locked = true;
+                    } else {
+                        match.locked = false;
+                    }
+                }
+
+                // Random scores for live matches
+                if (match.status === 'running' && match.homeScore === 0 && match.awayScore === 0) {
+                    match.homeScore = Math.floor(Math.random() * 3);
+                    match.awayScore = Math.floor(Math.random() * 2);
+                }
+
+                var isLive = match.status === 'running';
+                var isEnded = match.status === 'ended';
+                var statusClass = isLive ? 'live' : (isEnded ? 'ended' : 'upcoming');
+                var statusLabel = isLive ? match.minute + "'" : (isEnded ? 'FT' : 'Upcoming');
+                var scoreClass = isLive ? 'live' : (isEnded ? 'ended' : '');
+                var timeDisplay = match.matchTime ? new Date(match.matchTime).toLocaleString() : '';
+
+                // Check which odd is selected for this match
+                var selectedHome = selectedCombinations[match.id] && selectedCombinations[match.id].selection === 'home';
+                var selectedDraw = selectedCombinations[match.id] && selectedCombinations[match.id].selection === 'draw';
+                var selectedAway = selectedCombinations[match.id] && selectedCombinations[match.id].selection === 'away';
+
+                html += `
+                    <div class="match-item">
+                        <div class="match-header">
+                            <span class="match-number">${match.number}</span>
+                            <span class="match-status ${statusClass}">
+                                ${isLive ? '<span class="pulse"></span>' : ''}
+                                ${statusLabel}
+                            </span>
+                        </div>
+                        <div class="match-teams">
+                            <div class="team">
+                                <span class="flag">${match.flagHome}</span>
+                                <span class="team-name">${match.home}</span>
+                            </div>
+                            <div class="score ${scoreClass}">${match.homeScore} - ${match.awayScore}</div>
+                            <div class="team">
+                                <span class="team-name">${match.away}</span>
+                                <span class="flag">${match.flagAway}</span>
+                            </div>
+                        </div>
+                        <div class="match-odds">
+                            <div class="odd-btn ${match.locked ? 'locked' : ''} ${selectedHome ? 'selected' : ''}" 
+                                 onclick="selectOdd(${match.id}, 'home', ${match.odds.home.toFixed(2)})">
+                                <span class="label">1</span>
+                                ${match.odds.home.toFixed(2)}
+                            </div>
+                            <div class="odd-btn ${match.locked ? 'locked' : ''} ${selectedDraw ? 'selected' : ''}" 
+                                 onclick="selectOdd(${match.id}, 'draw', ${match.odds.draw.toFixed(2)})">
+                                <span class="label">X</span>
+                                ${match.odds.draw.toFixed(2)}
+                            </div>
+                            <div class="odd-btn ${match.locked ? 'locked' : ''} ${selectedAway ? 'selected' : ''}" 
+                                 onclick="selectOdd(${match.id}, 'away', ${match.odds.away.toFixed(2)})">
+                                <span class="label">2</span>
+                                ${match.odds.away.toFixed(2)}
+                            </div>
+                        </div>
+                        <div class="match-time">${timeDisplay}</div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            updateBetBar();
+        }
+
+        // ==========================================================
+        // SELECT ODD - WITH PROPER HIGHLIGHTING
+        // ==========================================================
+        function selectOdd(matchId, selection, oddValue) {
+            var match = allMatches.find(function(m) { return m.id === matchId; });
+            if (!match || match.locked) {
+                showToast('⚠️ This match is locked or already started!');
+                return;
+            }
+
+            // If the same selection is clicked, deselect it
+            if (selectedCombinations[matchId] && selectedCombinations[matchId].selection === selection) {
+                delete selectedCombinations[matchId];
+            } else {
+                selectedCombinations[matchId] = { selection: selection, odd: oddValue };
+            }
+
+            renderMatches();
+            updateBetBar();
+        }
+
+        // ==========================================================
+        // UPDATE BET BAR
+        // ==========================================================
+        function updateBetBar() {
+            var count = Object.keys(selectedCombinations).length;
+            document.getElementById('combinationCount').textContent = count + ' / 12';
+            
+            var btn = document.getElementById('playToWinBtn');
+            if (count === 12 && !isBettingLocked) {
+                btn.disabled = false;
+                btn.textContent = '🎯 Play to Win';
+                btn.className = 'btn-play';
+            } else if (isBettingLocked) {
+                btn.disabled = true;
+                btn.className = 'btn-play locked';
+                btn.textContent = '⏳ Betting Closed';
+            } else {
+                btn.disabled = true;
+                btn.textContent = count + ' / 12 selected';
+                btn.className = 'btn-play';
+            }
+        }
+
+        // ==========================================================
+        // PLAY TO WIN
+        // ==========================================================
+        function playToWin() {
+            var user = getCurrentUser();
+            if (!user) {
+                showToast('⚠️ Please login first.');
+                setTimeout(function() { window.location.href = 'login.html'; }, 800);
+                return;
+            }
+
+            var count = Object.keys(selectedCombinations).length;
+            if (count < 12) {
+                showToast('⚠️ You must predict all 12 games to play.');
+                return;
+            }
+
+            if (isBettingLocked) {
+                showToast('⚠️ Betting is closed for this round.');
+                return;
+            }
+
+            var selections = [];
+            allMatches.forEach(function(match) {
+                if (selectedCombinations[match.id]) {
+                    selections.push({
+                        matchId: match.id,
+                        matchNumber: match.number,
+                        home: match.home,
+                        away: match.away,
+                        selection: selectedCombinations[match.id].selection,
+                        odd: selectedCombinations[match.id].odd
+                    });
+                }
+            });
+
+            localStorage.setItem('phc_jackpot_selections', JSON.stringify(selections));
+
+            showToast('✅ Predictions saved! Now pick your card.');
+            setTimeout(function() {
+                window.location.href = 'games.html';
+            }, 800);
+        }
+
+        // ==========================================================
+        // GET CURRENT USER
+        // ==========================================================
+        function getCurrentUser() {
+            var localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (!localUser || !localUser.email) return null;
+            return localUser;
+        }
+
+        // ==========================================================
+        // COUNTDOWN TIMER
+        // ==========================================================
+        function setupCountdown() {
+            if (countdownInterval) clearInterval(countdownInterval);
+
+            var earliestMatch = null;
+            var now = new Date();
+
+            allMatches.forEach(function(match) {
+                var matchTime = new Date(match.matchTime);
+                if (matchTime > now) {
+                    if (!earliestMatch || matchTime < earliestMatch) {
+                        earliestMatch = matchTime;
+                    }
+                }
+            });
+
+            if (!earliestMatch) {
+                earliestMatch = new Date(now);
+                var daysUntilFriday = (5 - now.getDay() + 7) % 7;
+                if (daysUntilFriday === 0) daysUntilFriday = 7;
+                earliestMatch.setDate(now.getDate() + daysUntilFriday);
+                earliestMatch.setHours(14, 0, 0, 0);
+            }
+
+            roundEndTime = earliestMatch.getTime();
+
+            var anyLive = allMatches.some(function(m) { return m.status === 'running'; });
+            var allEnded = allMatches.every(function(m) { return m.status === 'ended'; });
+
+            if (anyLive) {
+                isBettingLocked = true;
+                document.getElementById('playToWinBtn').className = 'btn-play locked';
+                document.getElementById('playToWinBtn').textContent = '⏳ Betting Closed';
+                updateBetBar();
+            } else if (allEnded) {
+                document.getElementById('playToWinBtn').className = 'btn-play locked';
+                document.getElementById('playToWinBtn').textContent = '🔄 New Round Coming Soon';
+                updateBetBar();
+            }
+
+            countdownInterval = setInterval(function() {
+                var nowTime = new Date().getTime();
+                var distance = roundEndTime - nowTime;
+
+                if (distance < 0) {
+                    allMatches.forEach(function(match) {
+                        var matchTime = new Date(match.matchTime).getTime();
+                        if (nowTime >= matchTime && match.status === 'upcoming') {
+                            match.status = 'running';
+                            match.locked = true;
+                            isBettingLocked = true;
+                            renderMatches();
+                            updateBetBar();
+                            showToast('🔴 ' + match.home + ' vs ' + match.away + ' has started!');
+                        }
+                    });
+
+                    var allEndedCheck = allMatches.every(function(m) { return m.status === 'ended'; });
+                    if (allEndedCheck) {
+                        document.getElementById('playToWinBtn').className = 'btn-play locked';
+                        document.getElementById('playToWinBtn').textContent = '🔄 New Round Coming Soon';
+                        updateBetBar();
+                        var nextFriday = new Date(nowTime);
+                        var daysUntilNextFriday = (5 - new Date(nowTime).getDay() + 7) % 7;
+                        if (daysUntilNextFriday === 0) daysUntilNextFriday = 7;
+                        nextFriday.setDate(nextFriday.getDate() + daysUntilNextFriday);
+                        nextFriday.setHours(14, 0, 0, 0);
+                        roundEndTime = nextFriday.getTime();
+                    }
+                    return;
+                }
+
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("days").textContent = String(days).padStart(2, '0');
+                document.getElementById("hours").textContent = String(hours).padStart(2, '0');
+                document.getElementById("minutes").textContent = String(minutes).padStart(2, '0');
+                document.getElementById("seconds").textContent = String(seconds).padStart(2, '0');
+            }, 1000);
+        }
+
+        // ==========================================================
+        // TOAST
+        // ==========================================================
+        function showToast(msg, duration) {
+            duration = duration || 3000;
+            var toast = document.getElementById('toast');
+            if (!toast) return;
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(function() {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            var now = new Date();
+            var roundNum = now.getFullYear() + 
+                          String(now.getMonth() + 1).padStart(2, '0') + 
+                          String(now.getDate()).padStart(2, '0');
+            document.getElementById('roundNumber').textContent = roundNum;
+
+            // Load saved selections
+            var savedSelections = localStorage.getItem('phc_jackpot_selections');
+            if (savedSelections) {
+                try {
+                    var selections = JSON.parse(savedSelections);
+                    selections.forEach(function(sel) {
+                        selectedCombinations[sel.matchId] = { 
+                            selection: sel.selection, 
+                            odd: sel.odd 
+                        };
+                    });
+                } catch (e) {}
+            }
+
+            fetchWeekendMatches();
+
+            console.log('⚽ PHC Jackpot Predictor loaded!');
+            console.log('✅ Click 1, X, or 2 - it will highlight blue/gold!');
+        });
+
+        window.selectOdd = selectOdd;
+        window.playToWin = playToWin;
+        window.fetchWeekendMatches = fetchWeekendMatches;
+    </script>
+
+</body>
+</html>

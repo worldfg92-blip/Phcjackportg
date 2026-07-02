@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHC Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f0f2f5; display:flex; }
+        
+        /* SIDEBAR */
+        .sidebar {
+            width: 250px; background: #004b87; color: white; height: 100vh;
+            position: fixed; padding: 20px; display: flex; flex-direction: column;
+        }
+        .sidebar h2 { margin-bottom: 30px; font-size: 22px; }
+        .sidebar a {
+            color: rgba(255,255,255,0.7); text-decoration: none; padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05); display: block; font-weight: 600; transition: 0.3s;
+        }
+        .sidebar a:hover, .sidebar a.active { color: #fff; padding-left: 10px; }
+        .sidebar .logout { margin-top: auto; color: #ef4444; }
+
+        /* MAIN CONTENT */
+        .main-content { margin-left: 250px; width: calc(100% - 250px); padding: 20px; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .topbar h1 { font-size: 20px; color: #004b87; }
+        .topbar .admin-badge { background: #004b87; color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; }
+
+        /* STATS GRID */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .stat-card h3 { font-size: 13px; color: #6c757d; margin-bottom: 5px; }
+        .stat-card .number { font-size: 28px; font-weight: 800; color: #004b87; }
+
+        /* NOTIFICATION TOAST */
+        .admin-toast {
+            position: fixed; top: 20px; right: 20px; background: #1a1a2e; color: white;
+            padding: 15px 20px; border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none; z-index: 9999; animation: slideIn 0.5s ease; max-width: 350px;
+        }
+        .admin-toast.show { display: block; }
+        @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* SETTINGS FORM */
+        .settings-card { background: white; padding: 25px; border-radius: 12px; max-width: 500px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .settings-card label { display: block; font-weight: 600; margin-top: 15px; color: #333; }
+        .settings-card input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-top: 5px; }
+        .settings-card button { margin-top: 20px; background: #004b87; color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: 700; cursor: pointer; }
+
+        @media(max-width:768px) { .sidebar { width: 0; padding: 0; overflow: hidden; } .main-content { margin-left: 0; width: 100%; } .stats-grid { grid-template-columns: 1fr 1fr; } }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2><i class="fas fa-shield-alt"></i> PHC Admin</h2>
+        <a href="admin-dashboard.html" class="active"><i class="fas fa-chart-line"></i> Dashboard</a>
+        <a href="admin-users.html"><i class="fas fa-users"></i> Users</a>
+        <a href="admin-withdrawals.html"><i class="fas fa-money-bill-wave"></i> Withdrawals</a>
+        <a href="#" onclick="openSettings()"><i class="fas fa-cog"></i> Settings</a>
+        <a href="#" onclick="logoutAdmin()" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+        <div class="topbar">
+            <div>
+                <h1>Admin Dashboard</h1>
+                <span style="font-size:13px; color:#6c757d;">Real-time platform overview</span>
+            </div>
+            <div class="admin-badge"><i class="fas fa-circle" style="color:#10b981; font-size:10px;"></i> Online</div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-grid">
+            <div class="stat-card"><h3>Total Users</h3><div class="number" id="totalUsers">0</div></div>
+            <div class="stat-card"><h3>Pending Withdrawals</h3><div class="number" id="pendingWithdrawals">0</div></div>
+            <div class="stat-card"><h3>Total Deposits</h3><div class="number" id="totalDeposits">$0</div></div>
+            <div class="stat-card"><h3>Active Games</h3><div class="number" id="activeGames">0</div></div>
+        </div>
+
+        <!-- RECENT ACTIVITY -->
+        <div class="settings-card" style="max-width:100%;">
+            <h2 style="color:#004b87; margin-bottom:10px;">🔔 Recent Activity</h2>
+            <div id="activityLog" style="font-size:14px; color:#555; max-height:300px; overflow-y:auto;">
+                <p style="color:#999;">Loading activity...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settingsModal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:999;">
+        <div class="settings-card" style="width:90%;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2>⚙️ Admin Settings</h2>
+                <span onclick="document.getElementById('settingsModal').style.display='none'" style="cursor:pointer; font-size:24px;">&times;</span>
+            </div>
+            <label>Your Email (For Notifications)</label>
+            <input type="email" id="adminEmail" placeholder="admin@example.com" value="admin@phc.com">
+            <button onclick="saveAdminSettings()">Save Settings</button>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="admin-toast" id="adminToast">
+        <strong id="toastTitle">New Update!</strong>
+        <p id="toastMessage" style="font-size:13px; opacity:0.8; margin-top:5px;"></p>
+    </div>
+
+    <script>
+        // ============================================================
+        // 1. SUPABASE CONFIG
+        // ============================================================
+        const SUPABASE_URL = "https://gcesrhfyupmkrevaqpfr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjZXNyaGZ5dXBta3JldmFxcGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MjQ0MjAsImV4cCI6MjA5ODQwMDQyMH0.LarBYjP0Eg4HfFV_x5GVS7K1d4AuRfBWOjo0D1kL2xM";
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let adminEmail = localStorage.getItem('phc_admin_email') || '';
+
+        // ============================================================
+        // 2. TOAST & NOTIFICATIONS (SOUND + VIBRATION)
+        // ============================================================
+        function showAdminToast(title, message) {
+            const toast = document.getElementById('adminToast');
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = message;
+            toast.classList.add('show');
+            
+            // Play Sound
+            try {
+                const audio = new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3');
+                audio.volume = 0.5;
+                audio.play();
+            } catch(e) {}
+            
+            // Vibrate
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+
+            setTimeout(() => toast.classList.remove('show'), 5000);
+        }
+
+        // ============================================================
+        // 3. LOAD DASHBOARD STATS
+        // ============================================================
+        async function loadDashboardStats() {
+            // Get Users
+            const { count: userCount } = await supabase.from('users').select('*', { count: 'exact', head: true });
+            document.getElementById('totalUsers').textContent = userCount || 0;
+
+            // Get Pending Withdrawals
+            const { count: wdCount } = await supabase.from('withdrawals').select('*', { count: 'exact', head: true }).eq('status', 'pending');
+            document.getElementById('pendingWithdrawals').textContent = wdCount || 0;
+
+            // Get Total Deposits
+            const { data: deposits } = await supabase.from('transactions').select('amount').gte('amount', 0);
+            let totalDep = 0;
+            if(deposits) deposits.forEach(t => totalDep += t.amount);
+            document.getElementById('totalDeposits').textContent = '$' + totalDep.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+            document.getElementById('activeGames').textContent = "8";
+        }
+
+        // ============================================================
+        // 4. SETTINGS (Save Email)
+        // ============================================================
+        function openSettings() {
+            document.getElementById('settingsModal').style.display = 'flex';
+            document.getElementById('adminEmail').value = adminEmail;
+        }
+        function saveAdminSettings() {
+            adminEmail = document.getElementById('adminEmail').value;
+            localStorage.setItem('phc_admin_email', adminEmail);
+            document.getElementById('settingsModal').style.display = 'none';
+            showAdminToast('✅ Settings Saved', 'Admin email updated to ' + adminEmail);
+        }
+
+        // ============================================================
+        // 5. LISTEN FOR REAL-TIME ACTIVITY
+        // ============================================================
+        function listenForActivity() {
+            // Listen for new users
+            supabase.channel('admin-users-channel')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'users' }, payload => {
+                    const user = payload.new;
+                    showAdminToast('👤 New User Registered', `${user.first_name} ${user.last_name} (${user.email})`);
+                    sendEmailAlert('New User Registered', `${user.first_name} ${user.last_name} (${user.email}) joined the platform.`);
+                    loadDashboardStats();
+                    addToLog(`New user: ${user.first_name} ${user.last_name}`);
+                })
+                .subscribe();
+
+            // Listen for new withdrawal requests
+            supabase.channel('admin-withdrawals-channel')
+                .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'withdrawals' }, payload => {
+                    const w = payload.new;
+                    showAdminToast('💰 New Withdrawal Request', `${w.user_name} requested $${w.amount} via ${w.method}.`);
+                    sendEmailAlert('New Withdrawal', `${w.user_name} requested $${w.amount}. Check admin panel.`);
+                    loadDashboardStats();
+                    addToLog(`Withdrawal request: ${w.user_name} - $${w.amount}`);
+                })
+                .subscribe();
+        }
+
+        // ============================================================
+        // 6. EMAIL ALERT (Using Webhook)
+        // ============================================================
+        async function sendEmailAlert(subject, message) {
+            if (!adminEmail) return;
+            // Note: In production, call your Supabase Edge Function here.
+            console.log(`[EMAIL TO ${adminEmail}]: ${subject} - ${message}`);
+        }
+
+        // ============================================================
+        // 7. ACTIVITY LOG UI
+        // ============================================================
+        function addToLog(text) {
+            const log = document.getElementById('activityLog');
+            const entry = document.createElement('p');
+            entry.innerHTML = `<span style="color:#004b87; font-weight:700;">[${new Date().toLocaleTimeString()}]</span> ${text}`;
+            log.prepend(entry);
+            if(log.children.length > 20) log.removeChild(log.lastChild);
+        }
+
+        // ============================================================
+        // 8. LOGOUT
+        // ============================================================
+        function logoutAdmin() {
+            if(confirm('Logout of admin panel?')) {
+                localStorage.removeItem('phc_admin_session');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // ============================================================
+        // 9. INIT
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboardStats();
+            listenForActivity();
+            addToLog('Admin dashboard initialized.');
+            showAdminToast('🛡️ Admin Online', 'Monitoring platform activity...');
+        });
+    </script>
+</body>
+</html>

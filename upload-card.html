@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>Upload Card</title>
+
+
+<link rel="stylesheet" href="style.css">
+
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+</head>
+
+
+
+<body onload="loadGame()">
+
+
+
+<div class="app">
+
+
+
+
+
+
+<div class="topbar">
+
+
+<div class="logo">
+
+PHC
+
+</div>
+
+
+<i class="fas fa-arrow-left"
+onclick="history.back()">
+
+</i>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="welcome">
+
+
+<h1>
+
+Upload Your Card
+
+</h1>
+
+
+<p>
+
+Add clear photos of your card
+
+</p>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+
+<h2 id="cardName">
+
+Card
+
+</h2>
+
+
+
+
+<p>
+
+Amount:
+
+<b id="cardAmount">
+
+</b>
+
+</p>
+
+
+
+
+<p>
+
+Potential Win:
+
+<b id="winAmount">
+
+</b>
+
+</p>
+
+
+
+
+
+
+<div class="upload-box">
+
+
+
+<i class="fas fa-camera"></i>
+
+
+
+<input 
+type="file"
+accept="image/*"
+multiple
+onchange="previewImages(event)">
+
+
+
+<p>
+
+Tap to add card photos
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div id="preview"
+class="image-preview">
+
+</div>
+
+
+
+
+
+
+
+<button 
+class="play-button"
+onclick="continueGame()">
+
+
+Next
+
+</button>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="bottom-nav">
+
+
+
+<div class="nav-item"
+onclick="location.href='index.html'">
+
+<i class="fas fa-home"></i>
+
+Home
+
+</div>
+
+
+
+
+<div class="nav-item active">
+
+<i class="fas fa-trophy"></i>
+
+Jackpot
+
+</div>
+
+
+
+
+
+<div class="nav-item">
+
+<i class="fas fa-gear"></i>
+
+Settings
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<script src="jackpot.js"></script>
+
+
+</body>
+
+</html>

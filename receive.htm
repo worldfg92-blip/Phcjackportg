@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PHC Receive Money</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+<style>
+
+.page{
+
+min-height:100vh;
+background:#eef2f7;
+padding:20px;
+
+}
+
+
+.header{
+
+font-size:20px;
+font-weight:700;
+color:#004b87;
+margin-bottom:20px;
+
+}
+
+
+.box{
+
+background:white;
+padding:25px;
+border-radius:25px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+text-align:center;
+
+}
+
+
+.avatar{
+
+width:80px;
+height:80px;
+border-radius:50%;
+background:#004b87;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:35px;
+margin:auto;
+
+}
+
+
+
+.name{
+
+font-size:22px;
+font-weight:800;
+margin:15px;
+
+}
+
+
+
+.account{
+
+background:#f3f6fa;
+padding:15px;
+border-radius:15px;
+margin-top:20px;
+
+}
+
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="page">
+
+
+<div class="header" onclick="history.back()">
+
+<i class="fas fa-arrow-left"></i>
+
+Receive Money
+
+</div>
+
+
+
+
+<div class="box">
+
+
+<div class="avatar">
+
+<i class="fas fa-user"></i>
+
+</div>
+
+
+
+<div class="name" id="name">
+
+User
+
+</div>
+
+
+
+<p>
+Share your PHC email or phone to receive money
+</p>
+
+
+
+<div class="account">
+
+
+<h3>Email</h3>
+
+<p id="email">
+-
+</p>
+
+
+<br>
+
+
+<h3>Phone</h3>
+
+<p id="phone">
+-
+</p>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+<script src="receive.js"></script>
+
+
+</body>
+
+</html>
